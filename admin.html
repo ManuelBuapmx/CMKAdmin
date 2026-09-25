@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CheckMyKnowledge · Panel</title>
+<style>
+  :root {
+    --bg: #f3f4f1;
+    --paper: #ffffff;
+    --ink: #1c231d;
+    --muted: #5b6459;
+    --line: #d7dbd2;
+    --green: #26472f;
+    --green-dark: #17301f;
+    --gold: #b8901f;
+    --red: #a3312a;
+    --radius: 4px;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14180f;
+      --paper: #1c211a;
+      --ink: #e9ece5;
+      --muted: #9aa290;
+      --line: #33392c;
+      --green: #6fae7f;
+      --green-dark: #8fc79c;
+      --gold: #d9b354;
+      --red: #e2857e;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #14180f;
+    --paper: #1c211a;
+    --ink: #e9ece5;
+    --muted: #9aa290;
+    --line: #33392c;
+    --green: #6fae7f;
+    --green-dark: #8fc79c;
+    --gold: #d9b354;
+    --red: #e2857e;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); height: 100%; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; height: 100%; background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  .topbar {
+    background: var(--green-dark); color: #f3f4f1; padding: 14px 20px;
+    padding-top: calc(14px + env(safe-area-inset-top, 0px));
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .topbar h1 { font-family: Georgia, "Times New Roman", serif; font-size: 19px; font-weight: 600; margin: 0; }
+  .topbar button { background: transparent; border: 1px solid rgba(255,255,255,.4); color: #f3f4f1; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 20px; }
+  .tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid var(--line); }
+  .tab {
+    background: none; border: none; padding: 10px 4px; margin-right: 20px; font-size: 15px;
+    color: var(--muted); border-bottom: 2px solid transparent; border-radius: 0; width: auto;
+  }
+  .tab.on { color: var(--ink); border-bottom-color: var(--green); font-weight: 600; }
+  button {
+    cursor: pointer; font-size: 14px; padding: 9px 14px; border-radius: var(--radius);
+    border: 1px solid var(--green); background: var(--green); color: #fff;
+  }
+  button.secondary { background: transparent; color: var(--ink); border-color: var(--line); }
+  button.danger { background: transparent; color: var(--red); border-color: var(--red); }
+  button:disabled { opacity: .5; cursor: default; }
+  input, select {
+    font-size: 15px; padding: 9px 10px; border: 1px solid var(--line); border-radius: var(--radius);
+    background: var(--paper); color: var(--ink); width: 100%;
+  }
+  label { display: block; font-size: 13px; color: var(--muted); margin: 10px 0 4px; }
+  .card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+  .login-shell { min-height: 100%; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .login-shell .card { width: 100%; max-width: 340px; }
+  .login-shell h1 { font-family: Georgia, serif; font-size: 21px; margin: 0 0 4px; }
+  .login-shell p.sub { color: var(--muted); font-size: 13.5px; margin: 0 0 18px; }
+  .err { color: var(--red); font-size: 13.5px; margin-top: 10px; min-height: 1em; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; color: var(--muted); font-weight: 600; font-size: 12px; text-transform: none; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+  td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .num { font-variant-numeric: tabular-nums; }
+  .muted { color: var(--muted); }
+  .row-actions { display: flex; gap: 6px; }
+  .row-actions button { padding: 5px 9px; font-size: 13px; }
+  .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .opciones-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+  .opcion-row { display: flex; align-items: center; gap: 8px; }
+  .opcion-row input[type="radio"] { width: auto; }
+  .opcion-row input[type="text"] { flex: 1; }
+  .form-actions { display: flex; gap: 8px; margin-top: 16px; }
+  .scroller { overflow-x: auto; }
+  .estado-activa { color: var(--green); font-weight: 600; }
+  .estado-inactiva { color: var(--muted); }
+  .empty { text-align: center; color: var(--muted); padding: 30px 10px; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+var SUPABASE_URL = "https://juvqvshcfsrtscvzluaa.supabase.co";
+var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1dnF2c2hjZnNydHNjdnpsdWFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMDY4NjQsImV4cCI6MjEwNTg4Mjg2NH0.aL2bzJbTJ6DfzUlh8UaSBZ5Fah3Bae1tNBDi7R6BD68";
+
+var app = document.getElementById("app");
+var session = null; // { access_token }
+var tab = "preguntas";
+var preguntas = [];
+var resultados = [];
+var editando = null; // pregunta en edición, o "nueva"
+
+// --- Importar examen por script ---
+var scriptTexto = "";
+var scriptPreview = null; // array de preguntas parseadas, o null si no se ha procesado
+var scriptEditando = null; // índice (en scriptPreview) que se está editando, o null
+var scriptReemplazar = true; // desactivar las preguntas activas actuales al confirmar
+var scriptGuardando = false;
+var scriptErrorGuardado = "";
+
+try {
+  var guardada = localStorage.getItem("cmk_session");
+  if (guardada) session = JSON.parse(guardada);
+} catch (e) {}
+
+function el(tag, props, hijos) {
+  var e = document.createElement(tag);
+  if (props) for (var k in props) {
+    if (k === "text") e.textContent = props[k];
+    else if (k === "html") e.innerHTML = props[k];
+    else if (k.indexOf("on") === 0) e.addEventListener(k.slice(2), props[k]);
+    else e.setAttribute(k, props[k]);
+  }
+  (hijos || []).forEach(function (h) { if (h) e.appendChild(h); });
+  return e;
+}
+
+function api(path, opciones) {
+  opciones = opciones || {};
+  var headers = Object.assign({
+    apikey: SUPABASE_ANON_KEY,
+    Authorization: "Bearer " + (session ? session.access_token : SUPABASE_ANON_KEY)
+  }, opciones.headers || {});
+  return fetch(SUPABASE_URL + path, Object.assign({}, opciones, { headers: headers }))
+    .then(function (r) {
+      if (r.status === 401) { cerrarSesion(); throw new Error("Sesión vencida, entra de nuevo."); }
+      if (!r.ok) return r.text().then(function (t) { throw new Error(t || "Error de red"); });
+      if (r.status === 204) return null;
+      return r.text().then(function (t) { return t ? JSON.parse(t) : null; });
+    });
+}
+
+function iniciarSesion(correo, clave, onError) {
+  fetch(SUPABASE_URL + "/auth/v1/token?grant_type=password", {
+    method: "POST",
+    headers: { apikey: SUPABASE_ANON_KEY, "Content-Type": "application/json" },
+    body: JSON.stringify({ email: correo, password: clave })
+  }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+    .then(function (res) {
+      if (!res.ok) { onError(res.d.error_description || res.d.msg || "No se pudo iniciar sesión"); return; }
+      session = { access_token: res.d.access_token };
+      try { localStorage.setItem("cmk_session", JSON.stringify(session)); } catch (e) {}
+      render();
+    }).catch(function () { onError("No hay conexión."); });
+}
+
+function cerrarSesion() {
+  session = null;
+  try { localStorage.removeItem("cmk_session"); } catch (e) {}
+  render();
+}
+
+function cargarPreguntas() {
+  return api("/rest/v1/preguntas?select=*&order=orden.asc").then(function (filas) { preguntas = filas; });
+}
+function cargarResultados() {
+  return api("/rest/v1/resultados?select=*&order=creado_en.desc").then(function (filas) { resultados = filas; });
+}
+
+// El script se escribe (o se pega, casi tal cual) como un Apps Script de Google Forms:
+// se usa FormApp.create(...), exam.addMultipleChoiceItem(), item.setTitle(...),
+// item.createChoice(valor, esCorrecta) y item.setChoices([...]).
+// Los addTextItem/addListItem (datos del alumno, etc.) se aceptan pero se ignoran,
+// porque ese dato ya lo pide la app del estudiante aparte.
+function ejecutarScript(codigo) {
+  var examenesGenerados = [];
+
+  function itemTexto() {
+    var item = {};
+    item.setTitle = function () { return item; };
+    item.setRequired = function () { return item; };
+    item.setHelpText = function () { return item; };
+    return item;
+  }
+  function itemLista() {
+    var item = {};
+    item.setTitle = function () { return item; };
+    item.setRequired = function () { return item; };
+    item.createChoice = function (valor) { return { valor: valor }; };
+    item.setChoices = function () { return item; };
+    return item;
+  }
+  function itemOpcionMultiple(preguntas) {
+    var p = { texto: "", opciones: [], correcta: -1, orden: preguntas.length + 1, activa: true };
+    preguntas.push(p);
+    var item = {};
+    item.setTitle = function (t) { p.texto = String(t); return item; };
+    item.setRequired = function () { return item; };
+    item.setPoints = function () { return item; };
+    item.setHelpText = function () { return item; };
+    item.createChoice = function (valor, esCorrecta) {
+      var idx = p.opciones.length;
+      p.opciones.push(String(valor));
+      if (esCorrecta) p.correcta = idx;
+      return { valor: valor, idx: idx };
+    };
+    item.setChoiceValues = function (arr) { p.opciones = arr.map(String); return item; };
+    item.setChoices = function () { return item; }; // el orden ya quedó armado por createChoice
+    item.setCorrectAnswer = function (letraOIndice) {
+      p.correcta = typeof letraOIndice === "number" ? letraOIndice : String(letraOIndice).toUpperCase().charCodeAt(0) - 65;
+      return item;
+    };
+    return item;
+  }
+  function crearExam() {
+    var preguntas = [];
+    examenesGenerados.push(preguntas);
+    var exam = {};
+    exam.setTitle = function () { return exam; };
+    exam.setDescription = function () { return exam; };
+    exam.setIsQuiz = function () { return exam; };
+    exam.setConfirmationMessage = function () { return exam; };
+    exam.setShuffleQuestions = function () { return exam; };
+    exam.addTextItem = function () { return itemTexto(); };
+    exam.addParagraphTextItem = function () { return itemTexto(); };
+    exam.addListItem = function () { return itemLista(); };
+    exam.addMultipleChoiceItem = function () { return itemOpcionMultiple(preguntas); };
+    exam.addCheckboxItem = function () { return itemOpcionMultiple(preguntas); };
+    return exam;
+  }
+  var FormApp = { create: crearExam };
+
+  // Si el script define funciones (como al escribir un Apps Script normal),
+  // las ejecuta todas al final, como si le dieras a "Ejecutar" en cada una.
+  var nombresFunciones = [];
+  var re = /function\s+([A-Za-z_$][\w$]*)\s*\(/g, m;
+  while ((m = re.exec(codigo))) nombresFunciones.push(m[1]);
+  var llamadas = nombresFunciones.map(function (n) {
+    return "if (typeof " + n + " === 'function') { " + n + "(); }";
+  }).join("\n");
+
+  var correr = new Function("FormApp", codigo + "\n" + llamadas);
+  correr(FormApp);
+
+  if (!examenesGenerados.length) {
+    throw new Error("El script no llegó a llamar FormApp.create(...). Si tu examen está adentro de una función, revisa que el nombre esté bien escrito.");
+  }
+  var preguntas = examenesGenerados[examenesGenerados.length - 1];
+  preguntas.forEach(function (p, i) {
+    p.orden = i + 1;
+    if (!p.texto) p._error = "Falta el título de la pregunta (setTitle).";
+    else if (p.opciones.length < 2) p._error = "Necesita al menos 2 opciones.";
+    else if (p.correcta < 0 || p.correcta >= p.opciones.length) p._error = "No se marcó cuál opción es la correcta (createChoice(valor, true)).";
+    else p._error = null;
+  });
+  return preguntas;
+}
+
+function pantallaLogin() {
+  var correo = el("input", { type: "email", placeholder: "correo@ejemplo.com", autocomplete: "username" });
+  var clave = el("input", { type: "password", placeholder: "Contraseña", autocomplete: "current-password" });
+  var err = el("p", { class: "err" });
+  var boton = el("button", { text: "Entrar", style: "width:100%; margin-top:14px;" });
+  boton.onclick = function () {
+    if (!correo.value || !clave.value) { err.textContent = "Escribe tu correo y contraseña."; return; }
+    boton.disabled = true; boton.textContent = "Entrando...";
+    iniciarSesion(correo.value.trim(), clave.value, function (msg) {
+      err.textContent = msg; boton.disabled = false; boton.textContent = "Entrar";
+    });
+  };
+  var card = el("div", { class: "card" }, [
+    el("h1", { text: "CheckMyKnowledge" }),
+    el("p", { class: "sub", text: "Panel de administración" }),
+    el("label", { text: "Correo" }), correo,
+    el("label", { text: "Contraseña" }), clave,
+    boton, err
+  ]);
+  app.innerHTML = "";
+  app.appendChild(el("div", { class: "login-shell" }, [card]));
+}
+
+function formPregunta(p) {
+  var esNueva = !p || p === "nueva";
+  var base = esNueva ? { texto: "", opciones: ["", "", "", ""], correcta: 0, orden: preguntas.length + 1, activa: true } : p;
+  var texto = el("input", { type: "text", value: base.texto, placeholder: "Texto de la pregunta" });
+  var orden = el("input", { type: "number", value: base.orden });
+  var activa = el("input", { type: "checkbox" });
+  activa.checked = base.activa;
+  var opcionInputs = [];
+  var opcionesGrid = el("div", { class: "opciones-grid" });
+  base.opciones.forEach(function (txt, i) {
+    var radio = el("input", { type: "radio", name: "correcta" });
+    radio.checked = base.correcta === i;
+    var texto_i = el("input", { type: "text", value: txt, placeholder: "Opción " + String.fromCharCode(65 + i) });
+    opcionInputs.push({ radio: radio, input: texto_i });
+    opcionesGrid.appendChild(el("div", { class: "opcion-row" }, [radio, texto_i]));
+  });
+  var err = el("p", { class: "err" });
+
+  var guardar = el("button", { text: "Guardar" });
+  guardar.onclick = function () {
+    var opciones = opcionInputs.map(function (o) { return o.input.value.trim(); });
+    var correctaIdx = opcionInputs.findIndex(function (o) { return o.radio.checked; });
+    if (!texto.value.trim() || opciones.some(function (o) { return !o; })) {
+      err.textContent = "Completa el texto y las 4 opciones."; return;
+    }
+    var payload = {
+      texto: texto.value.trim(), opciones: opciones, correcta: correctaIdx,
+      orden: Number(orden.value) || 0, activa: activa.checked
+    };
+    guardar.disabled = true;
+    var peticion = esNueva
+      ? api("/rest/v1/preguntas", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+      : api("/rest/v1/preguntas?id=eq." + p.id, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+    peticion.then(function () { editando = null; return cargarPreguntas(); }).then(render)
+      .catch(function (e) { err.textContent = "No se pudo guardar: " + e.message; guardar.disabled = false; });
+  };
+  var cancelar = el("button", { class: "secondary", text: "Cancelar" });
+  cancelar.onclick = function () { editando = null; render(); };
+
+  return el("div", { class: "card", style: "margin-bottom:16px;" }, [
+    el("label", { text: "Pregunta" }), texto,
+    el("label", { text: "Opciones (marca la correcta)" }), opcionesGrid,
+    el("label", { text: "Orden" }), orden,
+    el("div", { style: "display:flex; align-items:center; gap:8px; margin-top:12px;" }, [activa, el("span", { text: "Activa (visible en el examen)" })]),
+    el("div", { class: "form-actions" }, [guardar, cancelar]),
+    err
+  ]);
+}
+
+function vistaPreguntas() {
+  var cont = el("div");
+  if (editando) { cont.appendChild(formPregunta(editando === "nueva" ? "nueva" : preguntas.find(function (p) { return p.id === editando; }))); }
+  else {
+    var nuevo = el("button", { text: "+ Nueva pregunta" });
+    nuevo.onclick = function () { editando = "nueva"; render(); };
+    cont.appendChild(el("div", { class: "toolbar" }, [el("span", { class: "muted", text: preguntas.length + " pregunta(s)" }), nuevo]));
+  }
+  if (!preguntas.length && !editando) {
+    cont.appendChild(el("div", { class: "empty", text: "No hay preguntas todavía. Agrega la primera." }));
+    return cont;
+  }
+  var tbody = el("tbody");
+  preguntas.forEach(function (p) {
+    var borrar = el("button", { class: "danger", text: "Borrar" });
+    borrar.onclick = function () {
+      if (!confirm('¿Borrar la pregunta "' + p.texto + '"?')) return;
+      api("/rest/v1/preguntas?id=eq." + p.id, { method: "DELETE" }).then(cargarPreguntas).then(render);
+    };
+    var editar = el("button", { class: "secondary", text: "Editar" });
+    editar.onclick = function () { editando = p.id; render(); };
+    tbody.appendChild(el("tr", null, [
+      el("td", { class: "num", text: p.orden }),
+      el("td", { text: p.texto }),
+      el("td", { text: String.fromCharCode(65 + p.correcta) + ") " + p.opciones[p.correcta] }),
+      el("td", { class: p.activa ? "estado-activa" : "estado-inactiva", text: p.activa ? "Activa" : "Inactiva" }),
+      el("td", null, [el("div", { class: "row-actions" }, [editar, borrar])])
+    ]));
+  });
+  cont.appendChild(el("div", { class: "scroller" }, [
+    el("table", null, [
+      el("thead", null, [el("tr", null, [el("th", { text: "#" }), el("th", { text: "Pregunta" }), el("th", { text: "Correcta" }), el("th", { text: "Estado" }), el("th", { text: "" })])]),
+      tbody
+    ])
+  ]));
+  return cont;
+}
+
+function vistaResultados() {
+  var cont = el("div", { class: "toolbar" }, [el("span", { class: "muted", text: resultados.length + " resultado(s)" })]);
+  if (!resultados.length) return el("div", null, [cont, el("div", { class: "empty", text: "Todavía no hay exámenes contestados." })]);
+  var tbody = el("tbody");
+  resultados.forEach(function (r) {
+    var borrar = el("button", { class: "danger", text: "Borrar" });
+    borrar.onclick = function () {
+      if (!confirm("¿Borrar este resultado?")) return;
+      api("/rest/v1/resultados?id=eq." + r.id, { method: "DELETE" }).then(cargarResultados).then(render);
+    };
+    var fecha = new Date(r.creado_en).toLocaleString("es-MX", { dateStyle: "medium", timeStyle: "short" });
+    tbody.appendChild(el("tr", null, [
+      el("td", { text: r.nombre }),
+      el("td", { class: "num", text: r.correctas + " / " + r.total }),
+      el("td", { class: "muted", text: fecha }),
+      el("td", null, [borrar])
+    ]));
+  });
+  return el("div", null, [cont, el("div", { class: "scroller" }, [
+    el("table", null, [
+      el("thead", null, [el("tr", null, [el("th", { text: "Alumno" }), el("th", { text: "Puntaje" }), el("th", { text: "Fecha" }), el("th", { text: "" })])]),
+      tbody
+    ])
+  ])]);
+}
+
+function formEdicionPreview(idx) {
+  var base = scriptPreview[idx];
+  var texto = el("input", { type: "text", value: base.texto, placeholder: "Texto de la pregunta" });
+  var orden = el("input", { type: "number", value: base.orden });
+  var opcionInputs = [];
+  var opcionesGrid = el("div", { class: "opciones-grid" });
+  base.opciones.forEach(function (txt, i) {
+    var radio = el("input", { type: "radio", name: "correcta-preview" });
+    radio.checked = base.correcta === i;
+    var texto_i = el("input", { type: "text", value: txt, placeholder: "Opción " + String.fromCharCode(65 + i) });
+    opcionInputs.push({ radio: radio, input: texto_i });
+    opcionesGrid.appendChild(el("div", { class: "opcion-row" }, [radio, texto_i]));
+  });
+  var activa = el("input", { type: "checkbox" });
+  activa.checked = base.activa;
+
+  var guardar = el("button", { text: "Guardar cambios" });
+  guardar.onclick = function () {
+    base.texto = texto.value.trim();
+    base.opciones = opcionInputs.map(function (o) { return o.input.value.trim(); });
+    base.correcta = opcionInputs.findIndex(function (o) { return o.radio.checked; });
+    base.orden = Number(orden.value) || base.orden;
+    base.activa = activa.checked;
+    base._error = !base.texto ? "Falta el texto de la pregunta."
+      : base.opciones.some(function (o) { return !o; }) ? "Todas las opciones deben tener texto."
+      : base.correcta < 0 ? "Marca cuál opción es la correcta."
+      : null;
+    scriptEditando = null;
+    render();
+  };
+  var cancelar = el("button", { class: "secondary", text: "Cancelar" });
+  cancelar.onclick = function () { scriptEditando = null; render(); };
+
+  return el("div", { class: "card", style: "margin-bottom:12px;" }, [
+    el("label", { text: "Pregunta" }), texto,
+    el("label", { text: "Opciones (marca la correcta)" }), opcionesGrid,
+    el("label", { text: "Orden" }), orden,
+    el("div", { style: "display:flex; align-items:center; gap:8px; margin-top:12px;" }, [activa, el("span", { text: "Activa" })]),
+    el("div", { class: "form-actions" }, [guardar, cancelar])
+  ]);
+}
+
+function guardarImportacion() {
+  var payload = scriptPreview.map(function (p) {
+    return { texto: p.texto, opciones: p.opciones, correcta: p.correcta, orden: p.orden, activa: p.activa };
+  });
+  scriptGuardando = true; scriptErrorGuardado = ""; render();
+  var trabajo = scriptReemplazar
+    ? api("/rest/v1/preguntas?activa=eq.true", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ activa: false }) })
+    : Promise.resolve();
+  trabajo
+    .then(function () { return api("/rest/v1/preguntas", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }); })
+    .then(function () { scriptTexto = ""; scriptPreview = null; scriptGuardando = false; tab = "preguntas"; return cargarPreguntas(); })
+    .then(render)
+    .catch(function (e) { scriptGuardando = false; scriptErrorGuardado = "No se pudo guardar: " + e.message; render(); });
+}
+
+function vistaImportar() {
+  if (scriptPreview === null) {
+    var area = el("textarea", {
+      placeholder: "function crearExamenUnidad2() {\n  var exam = FormApp.create('ENGLISH VIII - UNIT 2');\n\n  var item = exam.addMultipleChoiceItem();\n  item.setTitle('What is the capital of France?')\n      .setChoices([\n        item.createChoice('Paris', true),\n        item.createChoice('London', false),\n        item.createChoice('Berlin', false),\n        item.createChoice('Madrid', false)\n      ]);\n\n  var item2 = exam.addMultipleChoiceItem();\n  item2.setTitle('2 + 2 =')\n       .setChoices([\n         item2.createChoice('3', false),\n         item2.createChoice('4', true),\n         item2.createChoice('5', false)\n       ]);\n}",
+      style: "width:100%; min-height:260px; font-family:monospace; font-size:13.5px; padding:10px; border:1px solid var(--line); border-radius:var(--radius); background:var(--paper); color:var(--ink);"
+    });
+    area.value = scriptTexto;
+    var err = el("p", { class: "err", text: scriptErrorGuardado });
+    var procesar = el("button", { text: "Procesar" });
+    procesar.onclick = function () {
+      scriptTexto = area.value;
+      if (!scriptTexto.trim()) return;
+      try {
+        scriptPreview = ejecutarScript(scriptTexto);
+        scriptErrorGuardado = "";
+      } catch (e) {
+        scriptErrorGuardado = "No se pudo ejecutar el script: " + e.message;
+      }
+      render();
+    };
+    return el("div", { class: "card" }, [
+      el("p", { class: "muted", text: "Pega un script como los de Google Apps Script para Forms: usa FormApp.create(...), exam.addMultipleChoiceItem(), item.setTitle(...) e item.createChoice(valor, esCorrecta). Puedes pegar tu script de Forms casi tal cual — las preguntas de texto/lista para datos del alumno se ignoran solas." }),
+      area,
+      el("div", { class: "form-actions" }, [procesar]),
+      err
+    ]);
+  }
+
+  if (scriptEditando !== null) return formEdicionPreview(scriptEditando);
+
+  var errores = scriptPreview.filter(function (p) { return p._error; }).length;
+  var cont = el("div");
+  cont.appendChild(el("div", { class: "toolbar" }, [
+    el("span", { class: "muted", text: scriptPreview.length + " pregunta(s) leída(s)" + (errores ? " · " + errores + " con error" : "") })
+  ]));
+
+  scriptPreview.forEach(function (p, i) {
+    var editar = el("button", { class: "secondary", text: "Editar" });
+    editar.onclick = function () { scriptEditando = i; render(); };
+    var quitar = el("button", { class: "danger", text: "Quitar" });
+    quitar.onclick = function () { scriptPreview.splice(i, 1); render(); };
+    var filas = [el("div", { style: "display:flex; justify-content:space-between; gap:8px; align-items:start;" }, [
+      el("div", null, [
+        el("strong", { text: (p.orden + ". ") + (p.texto || "(sin texto)") }),
+        p._error
+          ? el("p", { class: "err", text: p._error })
+          : el("div", { class: "muted", style: "margin-top:4px; font-size:13.5px;" }, p.opciones.map(function (o, oi) {
+              return el("div", { text: String.fromCharCode(65 + oi) + ") " + o + (oi === p.correcta ? "  ✓" : "") });
+            }))
+      ]),
+      el("div", { class: "row-actions" }, [editar, quitar])
+    ])];
+    cont.appendChild(el("div", { class: "card", style: "margin-bottom:10px;" }, filas));
+  });
+
+  var reemplazar = el("input", { type: "checkbox" });
+  reemplazar.checked = scriptReemplazar;
+  reemplazar.onchange = function () { scriptReemplazar = reemplazar.checked; };
+
+  var confirmar = el("button", { text: scriptGuardando ? "Guardando..." : "Confirmar examen" });
+  confirmar.disabled = errores > 0 || scriptGuardando;
+  confirmar.onclick = guardarImportacion;
+  var descartar = el("button", { class: "secondary", text: "Descartar y editar script" });
+  descartar.onclick = function () { scriptPreview = null; scriptEditando = null; scriptErrorGuardado = ""; render(); };
+
+  cont.appendChild(el("div", { style: "display:flex; align-items:center; gap:8px; margin:14px 0;" }, [
+    reemplazar, el("span", { text: "Reemplazar el examen activo actual (desactiva las preguntas activas de hoy)" })
+  ]));
+  if (scriptErrorGuardado) cont.appendChild(el("p", { class: "err", text: scriptErrorGuardado }));
+  cont.appendChild(el("div", { class: "form-actions" }, [confirmar, descartar]));
+  return cont;
+}
+
+function pantallaPanel() {
+  var tabPreg = el("button", { class: "tab" + (tab === "preguntas" ? " on" : ""), text: "Preguntas" });
+  var tabImp = el("button", { class: "tab" + (tab === "importar" ? " on" : ""), text: "Importar" });
+  var tabRes = el("button", { class: "tab" + (tab === "resultados" ? " on" : ""), text: "Resultados" });
+  tabPreg.onclick = function () { tab = "preguntas"; editando = null; render(); };
+  tabImp.onclick = function () { tab = "importar"; render(); };
+  tabRes.onclick = function () { tab = "resultados"; render(); };
+  var salir = el("button", { text: "Cerrar sesión" });
+  salir.onclick = cerrarSesion;
+
+  var contenido = el("div", { class: "wrap" }, [
+    el("div", { class: "tabs" }, [tabPreg, tabImp, tabRes]),
+    tab === "preguntas" ? vistaPreguntas() : tab === "importar" ? vistaImportar() : vistaResultados()
+  ]);
+
+  app.innerHTML = "";
+  app.appendChild(el("div", { class: "topbar" }, [el("h1", { text: "CheckMyKnowledge" }), salir]));
+  app.appendChild(contenido);
+}
+
+function render() {
+  if (!session) { pantallaLogin(); return; }
+  Promise.all([cargarPreguntas(), cargarResultados()]).then(pantallaPanel).catch(function (e) {
+    app.innerHTML = "";
+    app.appendChild(el("div", { class: "wrap" }, [el("div", { class: "empty", text: "Error: " + e.message })]));
+  });
+}
+
+render();
+</script>
+</body>
+</html>
