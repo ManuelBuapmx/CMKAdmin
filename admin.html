@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>CheckMyKnowledge · Panel</title>
 <style>
+  /* Colores como variables para poder tener tema claro y oscuro con el mismo CSS. */
   :root {
     --bg: #f3f4f1;
     --paper: #ffffff;
@@ -17,9 +18,11 @@
     --red: #a3312a;
     --radius: 4px;
     box-sizing: border-box;
+    /* Respeta las barras del sistema en celulares con muesca. */
     padding-top: env(safe-area-inset-top, 0px);
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
+  /* Tema oscuro automático según el sistema, salvo que se fuerce el claro. */
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg: #14180f;
@@ -33,6 +36,7 @@
       --red: #e2857e;
     }
   }
+  /* Tema oscuro forzado (por si se quiere activar a mano con data-theme). */
   :root[data-theme="dark"] {
     --bg: #14180f;
     --paper: #1c211a;
@@ -50,6 +54,7 @@
     margin: 0; height: 100%; background: var(--bg); color: var(--ink);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
+  /* Barra superior con el título y el botón de cerrar sesión. */
   .topbar {
     background: var(--green-dark); color: #f3f4f1; padding: 14px 20px;
     padding-top: calc(14px + env(safe-area-inset-top, 0px));
@@ -57,7 +62,8 @@
   }
   .topbar h1 { font-family: Georgia, "Times New Roman", serif; font-size: 19px; font-weight: 600; margin: 0; }
   .topbar button { background: transparent; border: 1px solid rgba(255,255,255,.4); color: #f3f4f1; }
-  .wrap { max-width: 760px; margin: 0 auto; padding: 20px; }
+  /* Contenedor central del contenido (ancho máximo para que se lea bien). */
+  .wrap { max-width: 860px; margin: 0 auto; padding: 20px; }
   .tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid var(--line); }
   .tab {
     background: none; border: none; padding: 10px 4px; margin-right: 20px; font-size: 15px;
@@ -71,9 +77,9 @@
   button.secondary { background: transparent; color: var(--ink); border-color: var(--line); }
   button.danger { background: transparent; color: var(--red); border-color: var(--red); }
   button:disabled { opacity: .5; cursor: default; }
-  input, select {
+  input, select, textarea {
     font-size: 15px; padding: 9px 10px; border: 1px solid var(--line); border-radius: var(--radius);
-    background: var(--paper); color: var(--ink); width: 100%;
+    background: var(--paper); color: var(--ink); width: 100%; font-family: inherit;
   }
   label { display: block; font-size: 13px; color: var(--muted); margin: 10px 0 4px; }
   .card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
@@ -90,7 +96,9 @@
   .muted { color: var(--muted); }
   .row-actions { display: flex; gap: 6px; }
   .row-actions button { padding: 5px 9px; font-size: 13px; }
-  .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
+  /* El selector de materia dentro de la barra no debe ocupar todo el ancho. */
+  .toolbar select { width: auto; max-width: 50%; }
   .opciones-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
   .opcion-row { display: flex; align-items: center; gap: 8px; }
   .opcion-row input[type="radio"] { width: auto; }
@@ -100,34 +108,46 @@
   .estado-activa { color: var(--green); font-weight: 600; }
   .estado-inactiva { color: var(--muted); }
   .empty { text-align: center; color: var(--muted); padding: 30px 10px; }
+  /* Etiqueta pequeña para mostrar la sección de una pregunta en las listas. */
+  .chip { display: inline-block; font-size: 12px; color: var(--green); border: 1px solid var(--line); border-radius: 10px; padding: 1px 8px; margin-top: 4px; }
 </style>
 </head>
 <body>
 <div id="app"></div>
 <script>
+// ---- Conexión con Supabase ----
+// La clave "anon" es pública por diseño (la seguridad real está en las políticas
+// RLS de la base). Tras iniciar sesión, el panel usa el access_token del
+// profesor, y las políticas "admin puede ..." le permiten leer/escribir todo.
 var SUPABASE_URL = "https://juvqvshcfsrtscvzluaa.supabase.co";
 var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1dnF2c2hjZnNydHNjdnpsdWFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMDY4NjQsImV4cCI6MjEwNTg4Mjg2NH0.aL2bzJbTJ6DfzUlh8UaSBZ5Fah3Bae1tNBDi7R6BD68";
 
 var app = document.getElementById("app");
-var session = null; // { access_token }
-var tab = "preguntas";
-var preguntas = [];
-var resultados = [];
-var editando = null; // pregunta en edición, o "nueva"
+var session = null;        // { access_token } del profesor, o null si no ha entrado
+var tab = "preguntas";     // pestaña visible: preguntas | importar | resultados
+var materias = [];         // NUEVO: lista de materias (para los selectores)
+var preguntas = [];        // todas las preguntas (activas e inactivas)
+var resultados = [];       // resultados de los exámenes contestados
+var editando = null;       // id de la pregunta en edición, o "nueva", o null
+var materiaFiltro = "";    // NUEVO: id de materia por la que se filtra la lista ("" = todas)
 
 // --- Importar examen por script ---
-var scriptTexto = "";
-var scriptPreview = null; // array de preguntas parseadas, o null si no se ha procesado
-var scriptEditando = null; // índice (en scriptPreview) que se está editando, o null
-var scriptReemplazar = true; // desactivar las preguntas activas actuales al confirmar
-var scriptGuardando = false;
-var scriptErrorGuardado = "";
+var scriptTexto = "";            // texto pegado por el profesor
+var scriptPreview = null;        // preguntas parseadas, o null si aún no se procesa
+var scriptEditando = null;       // índice (en scriptPreview) en edición, o null
+var scriptReemplazar = true;     // desactivar las preguntas activas de la materia al confirmar
+var scriptGuardando = false;     // true mientras se envía a Supabase
+var scriptErrorGuardado = "";    // mensaje de error al guardar/procesar
+var scriptMateria = "";          // NUEVO: id de la materia destino de la importación
 
+// Recupera la sesión guardada (si el profesor ya había entrado antes).
 try {
   var guardada = localStorage.getItem("cmk_session");
   if (guardada) session = JSON.parse(guardada);
 } catch (e) {}
 
+// Crea un elemento DOM. props: text (textContent), html (innerHTML),
+// onXXX (listeners) o cualquier otro atributo. hijos: arreglo de nodos.
 function el(tag, props, hijos) {
   var e = document.createElement(tag);
   if (props) for (var k in props) {
@@ -140,6 +160,8 @@ function el(tag, props, hijos) {
   return e;
 }
 
+// Llamada a la API REST de Supabase con el token del profesor (o el anon si
+// no hay sesión). Si Supabase responde 401 se cierra la sesión (token vencido).
 function api(path, opciones) {
   opciones = opciones || {};
   var headers = Object.assign({
@@ -155,6 +177,7 @@ function api(path, opciones) {
     });
 }
 
+// Inicio de sesión con correo y contraseña (Supabase Auth).
 function iniciarSesion(correo, clave, onError) {
   fetch(SUPABASE_URL + "/auth/v1/token?grant_type=password", {
     method: "POST",
@@ -169,12 +192,17 @@ function iniciarSesion(correo, clave, onError) {
     }).catch(function () { onError("No hay conexión."); });
 }
 
+// Borra la sesión local y regresa a la pantalla de login.
 function cerrarSesion() {
   session = null;
   try { localStorage.removeItem("cmk_session"); } catch (e) {}
   render();
 }
 
+// NUEVO: carga las materias (el profesor ve todas, también las inactivas).
+function cargarMaterias() {
+  return api("/rest/v1/materias?select=id,nombre,activa&order=orden.asc").then(function (filas) { materias = filas; });
+}
 function cargarPreguntas() {
   return api("/rest/v1/preguntas?select=*&order=orden.asc").then(function (filas) { preguntas = filas; });
 }
@@ -182,14 +210,43 @@ function cargarResultados() {
   return api("/rest/v1/resultados?select=*&order=creado_en.desc").then(function (filas) { resultados = filas; });
 }
 
+// NUEVO: nombre legible de una materia a partir de su id (para las tablas).
+// Si la pregunta no tiene materia (materia_id vacío) lo dice explícitamente,
+// porque esas preguntas NO aparecen en la app del alumno.
+function nombreMateria(id) {
+  if (id === null || id === undefined) return "⚠ Sin materia";
+  var m = materias.find(function (x) { return String(x.id) === String(id); });
+  return m ? m.nombre : "Materia " + id;
+}
+
+// NUEVO: crea un <select> con las materias. "seleccionada" es el id preseleccionado.
+// Se devuelve el elemento; el id elegido se lee con valorMateria(select).
+function selectorMaterias(seleccionada, conOpcionTodas) {
+  var s = el("select");
+  if (conOpcionTodas) s.appendChild(el("option", { value: "", text: "Todas las materias" }));
+  materias.forEach(function (m) { s.appendChild(el("option", { value: String(m.id), text: m.nombre })); });
+  s.value = seleccionada === null || seleccionada === undefined ? "" : String(seleccionada);
+  return s;
+}
+// Convierte el valor del <select> en el id real (número) o null si está vacío.
+// materia_id es bigint en la base, por eso se manda como número.
+function valorMateria(select) {
+  return select.value === "" ? null : Number(select.value);
+}
+
 // El script se escribe (o se pega, casi tal cual) como un Apps Script de Google Forms:
 // se usa FormApp.create(...), exam.addMultipleChoiceItem(), item.setTitle(...),
 // item.createChoice(valor, esCorrecta) y item.setChoices([...]).
 // Los addTextItem/addListItem (datos del alumno, etc.) se aceptan pero se ignoran,
 // porque ese dato ya lo pide la app del estudiante aparte.
+// CAMBIO (1/oct/2026): ahora el título de cada FormApp.create(título) se guarda
+// como "seccion" de sus preguntas (así lo documenta index.html), y si el script
+// crea VARIOS exámenes se importan todos juntos, en orden. Antes solo se
+// importaba el último y se perdía el título.
 function ejecutarScript(codigo) {
-  var examenesGenerados = [];
+  var examenesGenerados = []; // cada elemento: { titulo, preguntas: [] }
 
+  // Campo de texto del formulario original: se ignora por completo.
   function itemTexto() {
     var item = {};
     item.setTitle = function () { return item; };
@@ -197,6 +254,7 @@ function ejecutarScript(codigo) {
     item.setHelpText = function () { return item; };
     return item;
   }
+  // Lista desplegable (datos del alumno): se ignora por completo.
   function itemLista() {
     var item = {};
     item.setTitle = function () { return item; };
@@ -205,14 +263,17 @@ function ejecutarScript(codigo) {
     item.setChoices = function () { return item; };
     return item;
   }
-  function itemOpcionMultiple(preguntas) {
-    var p = { texto: "", opciones: [], correcta: -1, orden: preguntas.length + 1, activa: true };
-    preguntas.push(p);
+  // Pregunta de opción múltiple: es la única que se convierte en pregunta real.
+  function itemOpcionMultiple(lista, seccion) {
+    var p = { texto: "", opciones: [], correcta: -1, orden: lista.length + 1, activa: true, seccion: seccion || null, contexto: null };
+    lista.push(p);
     var item = {};
     item.setTitle = function (t) { p.texto = String(t); return item; };
     item.setRequired = function () { return item; };
     item.setPoints = function () { return item; };
     item.setHelpText = function () { return item; };
+    // createChoice registra la opción en el orden en que se crea y, si es la
+    // correcta, guarda su posición.
     item.createChoice = function (valor, esCorrecta) {
       var idx = p.opciones.length;
       p.opciones.push(String(valor));
@@ -227,11 +288,13 @@ function ejecutarScript(codigo) {
     };
     return item;
   }
-  function crearExam() {
-    var preguntas = [];
-    examenesGenerados.push(preguntas);
+  // Simula el objeto "formulario" que devuelve FormApp.create(título).
+  function crearExam(titulo) {
+    var lista = [];
+    var seccion = titulo ? String(titulo) : null;
+    examenesGenerados.push({ titulo: seccion, preguntas: lista });
     var exam = {};
-    exam.setTitle = function () { return exam; };
+    exam.setTitle = function (t) { seccion = String(t); examenesGenerados[examenesGenerados.length - 1].titulo = seccion; return exam; };
     exam.setDescription = function () { return exam; };
     exam.setIsQuiz = function () { return exam; };
     exam.setConfirmationMessage = function () { return exam; };
@@ -239,8 +302,9 @@ function ejecutarScript(codigo) {
     exam.addTextItem = function () { return itemTexto(); };
     exam.addParagraphTextItem = function () { return itemTexto(); };
     exam.addListItem = function () { return itemLista(); };
-    exam.addMultipleChoiceItem = function () { return itemOpcionMultiple(preguntas); };
-    exam.addCheckboxItem = function () { return itemOpcionMultiple(preguntas); };
+    // La sección se lee al crear la pregunta, así que usa el título vigente.
+    exam.addMultipleChoiceItem = function () { return itemOpcionMultiple(lista, seccion); };
+    exam.addCheckboxItem = function () { return itemOpcionMultiple(lista, seccion); };
     return exam;
   }
   var FormApp = { create: crearExam };
@@ -260,17 +324,23 @@ function ejecutarScript(codigo) {
   if (!examenesGenerados.length) {
     throw new Error("El script no llegó a llamar FormApp.create(...). Si tu examen está adentro de una función, revisa que el nombre esté bien escrito.");
   }
-  var preguntas = examenesGenerados[examenesGenerados.length - 1];
-  preguntas.forEach(function (p, i) {
+
+  // Une las preguntas de todos los exámenes generados, en orden, y las numera
+  // de corrido (1, 2, 3...). Cada una conserva su sección.
+  var todas = [];
+  examenesGenerados.forEach(function (ex) { ex.preguntas.forEach(function (p) { todas.push(p); }); });
+  todas.forEach(function (p, i) {
     p.orden = i + 1;
+    // Validaciones: si hay error, el botón "Confirmar" queda bloqueado.
     if (!p.texto) p._error = "Falta el título de la pregunta (setTitle).";
     else if (p.opciones.length < 2) p._error = "Necesita al menos 2 opciones.";
     else if (p.correcta < 0 || p.correcta >= p.opciones.length) p._error = "No se marcó cuál opción es la correcta (createChoice(valor, true)).";
     else p._error = null;
   });
-  return preguntas;
+  return todas;
 }
 
+// Pantalla de login del profesor.
 function pantallaLogin() {
   var correo = el("input", { type: "email", placeholder: "correo@ejemplo.com", autocomplete: "username" });
   var clave = el("input", { type: "password", placeholder: "Contraseña", autocomplete: "current-password" });
@@ -294,11 +364,23 @@ function pantallaLogin() {
   app.appendChild(el("div", { class: "login-shell" }, [card]));
 }
 
+// Formulario para crear o editar UNA pregunta.
+// CAMBIO: ahora incluye materia, sección y contexto. Antes no guardaba
+// materia_id, y la app del alumno (que filtra por materia) no veía esas preguntas.
 function formPregunta(p) {
   var esNueva = !p || p === "nueva";
-  var base = esNueva ? { texto: "", opciones: ["", "", "", ""], correcta: 0, orden: preguntas.length + 1, activa: true } : p;
+  // Materia por defecto para una pregunta nueva: la del filtro activo, o la primera.
+  var materiaInicial = materiaFiltro !== "" ? materiaFiltro : (materias.length ? materias[0].id : "");
+  var base = esNueva
+    ? { texto: "", opciones: ["", "", "", ""], correcta: 0, orden: preguntas.length + 1, activa: true, materia_id: materiaInicial, seccion: "", contexto: "" }
+    : p;
   var texto = el("input", { type: "text", value: base.texto, placeholder: "Texto de la pregunta" });
   var orden = el("input", { type: "number", value: base.orden });
+  var materiaSel = selectorMaterias(base.materia_id, false);
+  var seccion = el("input", { type: "text", value: base.seccion || "", placeholder: "Ej. Unidad 1 - Present Simple (opcional)" });
+  // textarea: su valor se asigna por propiedad (el atributo "value" no aplica).
+  var contexto = el("textarea", { rows: "3", placeholder: "Link de YouTube o texto de apoyo (opcional)" });
+  contexto.value = base.contexto || "";
   var activa = el("input", { type: "checkbox" });
   activa.checked = base.activa;
   var opcionInputs = [];
@@ -319,9 +401,17 @@ function formPregunta(p) {
     if (!texto.value.trim() || opciones.some(function (o) { return !o; })) {
       err.textContent = "Completa el texto y las 4 opciones."; return;
     }
+    // Sin materia la pregunta quedaría invisible para el alumno: se exige.
+    if (valorMateria(materiaSel) === null) {
+      err.textContent = "Elige la materia a la que pertenece la pregunta."; return;
+    }
     var payload = {
       texto: texto.value.trim(), opciones: opciones, correcta: correctaIdx,
-      orden: Number(orden.value) || 0, activa: activa.checked
+      orden: Number(orden.value) || 0, activa: activa.checked,
+      materia_id: valorMateria(materiaSel),
+      // Vacío se guarda como null (así la app no muestra etiqueta ni bloque).
+      seccion: seccion.value.trim() || null,
+      contexto: contexto.value.trim() || null
     };
     guardar.disabled = true;
     var peticion = esNueva
@@ -334,6 +424,9 @@ function formPregunta(p) {
   cancelar.onclick = function () { editando = null; render(); };
 
   return el("div", { class: "card", style: "margin-bottom:16px;" }, [
+    el("label", { text: "Materia" }), materiaSel,
+    el("label", { text: "Sección (opcional)" }), seccion,
+    el("label", { text: "Contexto: video o texto de apoyo (opcional)" }), contexto,
     el("label", { text: "Pregunta" }), texto,
     el("label", { text: "Opciones (marca la correcta)" }), opcionesGrid,
     el("label", { text: "Orden" }), orden,
@@ -343,20 +436,29 @@ function formPregunta(p) {
   ]);
 }
 
+// Pestaña "Preguntas": lista, filtro por materia y alta/edición/borrado.
 function vistaPreguntas() {
   var cont = el("div");
-  if (editando) { cont.appendChild(formPregunta(editando === "nueva" ? "nueva" : preguntas.find(function (p) { return p.id === editando; }))); }
-  else {
+  if (editando) {
+    cont.appendChild(formPregunta(editando === "nueva" ? "nueva" : preguntas.find(function (p) { return p.id === editando; })));
+  } else {
     var nuevo = el("button", { text: "+ Nueva pregunta" });
     nuevo.onclick = function () { editando = "nueva"; render(); };
-    cont.appendChild(el("div", { class: "toolbar" }, [el("span", { class: "muted", text: preguntas.length + " pregunta(s)" }), nuevo]));
+    // NUEVO: filtro por materia, para no mezclar exámenes de distintas materias.
+    var filtro = selectorMaterias(materiaFiltro, true);
+    filtro.onchange = function () { materiaFiltro = filtro.value; render(); };
+    var visibles = preguntas.filter(function (p) { return materiaFiltro === "" || String(p.materia_id) === materiaFiltro; });
+    cont.appendChild(el("div", { class: "toolbar" }, [
+      el("span", { class: "muted", text: visibles.length + " pregunta(s)" }), filtro, nuevo
+    ]));
   }
-  if (!preguntas.length && !editando) {
+  var lista = preguntas.filter(function (p) { return materiaFiltro === "" || String(p.materia_id) === materiaFiltro; });
+  if (!lista.length && !editando) {
     cont.appendChild(el("div", { class: "empty", text: "No hay preguntas todavía. Agrega la primera." }));
     return cont;
   }
   var tbody = el("tbody");
-  preguntas.forEach(function (p) {
+  lista.forEach(function (p) {
     var borrar = el("button", { class: "danger", text: "Borrar" });
     borrar.onclick = function () {
       if (!confirm('¿Borrar la pregunta "' + p.texto + '"?')) return;
@@ -364,9 +466,12 @@ function vistaPreguntas() {
     };
     var editar = el("button", { class: "secondary", text: "Editar" });
     editar.onclick = function () { editando = p.id; render(); };
+    // Columna de pregunta: texto + (si la tiene) su sección como etiqueta.
+    var celdaTexto = el("td", null, [el("div", { text: p.texto }), p.seccion ? el("span", { class: "chip", text: p.seccion }) : null]);
     tbody.appendChild(el("tr", null, [
       el("td", { class: "num", text: p.orden }),
-      el("td", { text: p.texto }),
+      celdaTexto,
+      el("td", { class: p.materia_id === null ? "estado-inactiva" : "", text: nombreMateria(p.materia_id) }),
       el("td", { text: String.fromCharCode(65 + p.correcta) + ") " + p.opciones[p.correcta] }),
       el("td", { class: p.activa ? "estado-activa" : "estado-inactiva", text: p.activa ? "Activa" : "Inactiva" }),
       el("td", null, [el("div", { class: "row-actions" }, [editar, borrar])])
@@ -374,13 +479,14 @@ function vistaPreguntas() {
   });
   cont.appendChild(el("div", { class: "scroller" }, [
     el("table", null, [
-      el("thead", null, [el("tr", null, [el("th", { text: "#" }), el("th", { text: "Pregunta" }), el("th", { text: "Correcta" }), el("th", { text: "Estado" }), el("th", { text: "" })])]),
+      el("thead", null, [el("tr", null, [el("th", { text: "#" }), el("th", { text: "Pregunta" }), el("th", { text: "Materia" }), el("th", { text: "Correcta" }), el("th", { text: "Estado" }), el("th", { text: "" })])]),
       tbody
     ])
   ]));
   return cont;
 }
 
+// Pestaña "Resultados": exámenes ya contestados (CAMBIO: se muestra la materia).
 function vistaResultados() {
   var cont = el("div", { class: "toolbar" }, [el("span", { class: "muted", text: resultados.length + " resultado(s)" })]);
   if (!resultados.length) return el("div", null, [cont, el("div", { class: "empty", text: "Todavía no hay exámenes contestados." })]);
@@ -394,6 +500,7 @@ function vistaResultados() {
     var fecha = new Date(r.creado_en).toLocaleString("es-MX", { dateStyle: "medium", timeStyle: "short" });
     tbody.appendChild(el("tr", null, [
       el("td", { text: r.nombre }),
+      el("td", { class: "muted", text: nombreMateria(r.materia_id) }),
       el("td", { class: "num", text: r.correctas + " / " + r.total }),
       el("td", { class: "muted", text: fecha }),
       el("td", null, [borrar])
@@ -401,16 +508,20 @@ function vistaResultados() {
   });
   return el("div", null, [cont, el("div", { class: "scroller" }, [
     el("table", null, [
-      el("thead", null, [el("tr", null, [el("th", { text: "Alumno" }), el("th", { text: "Puntaje" }), el("th", { text: "Fecha" }), el("th", { text: "" })])]),
+      el("thead", null, [el("tr", null, [el("th", { text: "Alumno" }), el("th", { text: "Materia" }), el("th", { text: "Puntaje" }), el("th", { text: "Fecha" }), el("th", { text: "" })])]),
       tbody
     ])
   ])]);
 }
 
+// Edición de UNA pregunta de la vista previa de importación (aún no guardada).
 function formEdicionPreview(idx) {
   var base = scriptPreview[idx];
   var texto = el("input", { type: "text", value: base.texto, placeholder: "Texto de la pregunta" });
   var orden = el("input", { type: "number", value: base.orden });
+  var seccion = el("input", { type: "text", value: base.seccion || "", placeholder: "Sección (opcional)" });
+  var contexto = el("textarea", { rows: "3", placeholder: "Link de YouTube o texto de apoyo (opcional)" });
+  contexto.value = base.contexto || "";
   var opcionInputs = [];
   var opcionesGrid = el("div", { class: "opciones-grid" });
   base.opciones.forEach(function (txt, i) {
@@ -430,6 +541,9 @@ function formEdicionPreview(idx) {
     base.correcta = opcionInputs.findIndex(function (o) { return o.radio.checked; });
     base.orden = Number(orden.value) || base.orden;
     base.activa = activa.checked;
+    base.seccion = seccion.value.trim() || null;
+    base.contexto = contexto.value.trim() || null;
+    // Se vuelve a validar para que el botón "Confirmar" refleje el estado real.
     base._error = !base.texto ? "Falta el texto de la pregunta."
       : base.opciones.some(function (o) { return !o; }) ? "Todas las opciones deben tener texto."
       : base.correcta < 0 ? "Marca cuál opción es la correcta."
@@ -441,6 +555,8 @@ function formEdicionPreview(idx) {
   cancelar.onclick = function () { scriptEditando = null; render(); };
 
   return el("div", { class: "card", style: "margin-bottom:12px;" }, [
+    el("label", { text: "Sección (opcional)" }), seccion,
+    el("label", { text: "Contexto (opcional)" }), contexto,
     el("label", { text: "Pregunta" }), texto,
     el("label", { text: "Opciones (marca la correcta)" }), opcionesGrid,
     el("label", { text: "Orden" }), orden,
@@ -449,22 +565,43 @@ function formEdicionPreview(idx) {
   ]);
 }
 
+// Guarda en Supabase las preguntas de la vista previa.
+// CAMBIOS: (1) cada pregunta lleva materia_id, seccion y contexto;
+// (2) "reemplazar" ahora desactiva SOLO las preguntas activas de la materia
+// elegida (antes desactivaba las de todas las materias); (3) si NO se
+// reemplaza, el orden se corre para quedar después de las preguntas ya
+// existentes de esa materia.
 function guardarImportacion() {
+  var materiaId = scriptMateria === "" ? null : Number(scriptMateria);
+  if (materiaId === null) { scriptErrorGuardado = "Elige la materia destino antes de confirmar."; render(); return; }
+
+  // Offset de orden: 0 si se reemplaza; si no, el mayor orden actual de la materia.
+  var offset = 0;
+  if (!scriptReemplazar) {
+    preguntas.forEach(function (q) { if (q.materia_id === materiaId && q.orden > offset) offset = q.orden; });
+  }
+  // Todas las filas deben tener exactamente las mismas claves (requisito de la
+  // inserción masiva de PostgREST).
   var payload = scriptPreview.map(function (p) {
-    return { texto: p.texto, opciones: p.opciones, correcta: p.correcta, orden: p.orden, activa: p.activa };
+    return {
+      texto: p.texto, opciones: p.opciones, correcta: p.correcta, orden: p.orden + offset,
+      activa: p.activa, materia_id: materiaId, seccion: p.seccion || null, contexto: p.contexto || null
+    };
   });
   scriptGuardando = true; scriptErrorGuardado = ""; render();
   var trabajo = scriptReemplazar
-    ? api("/rest/v1/preguntas?activa=eq.true", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ activa: false }) })
+    ? api("/rest/v1/preguntas?activa=eq.true&materia_id=eq." + materiaId, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ activa: false }) })
     : Promise.resolve();
   trabajo
     .then(function () { return api("/rest/v1/preguntas", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }); })
-    .then(function () { scriptTexto = ""; scriptPreview = null; scriptGuardando = false; tab = "preguntas"; return cargarPreguntas(); })
+    .then(function () { scriptTexto = ""; scriptPreview = null; scriptGuardando = false; tab = "preguntas"; materiaFiltro = String(materiaId); return cargarPreguntas(); })
     .then(render)
     .catch(function (e) { scriptGuardando = false; scriptErrorGuardado = "No se pudo guardar: " + e.message; render(); });
 }
 
+// Pestaña "Importar": pegar script -> vista previa -> confirmar.
 function vistaImportar() {
+  // Paso 1: pegar el script.
   if (scriptPreview === null) {
     var area = el("textarea", {
       placeholder: "function crearExamenUnidad2() {\n  var exam = FormApp.create('ENGLISH VIII - UNIT 2');\n\n  var item = exam.addMultipleChoiceItem();\n  item.setTitle('What is the capital of France?')\n      .setChoices([\n        item.createChoice('Paris', true),\n        item.createChoice('London', false),\n        item.createChoice('Berlin', false),\n        item.createChoice('Madrid', false)\n      ]);\n\n  var item2 = exam.addMultipleChoiceItem();\n  item2.setTitle('2 + 2 =')\n       .setChoices([\n         item2.createChoice('3', false),\n         item2.createChoice('4', true),\n         item2.createChoice('5', false)\n       ]);\n}",
@@ -485,15 +622,17 @@ function vistaImportar() {
       render();
     };
     return el("div", { class: "card" }, [
-      el("p", { class: "muted", text: "Pega un script como los de Google Apps Script para Forms: usa FormApp.create(...), exam.addMultipleChoiceItem(), item.setTitle(...) e item.createChoice(valor, esCorrecta). Puedes pegar tu script de Forms casi tal cual — las preguntas de texto/lista para datos del alumno se ignoran solas." }),
+      el("p", { class: "muted", text: "Pega un script como los de Google Apps Script para Forms: usa FormApp.create(...), exam.addMultipleChoiceItem(), item.setTitle(...) e item.createChoice(valor, esCorrecta). Puedes pegar tu script de Forms casi tal cual — las preguntas de texto/lista para datos del alumno se ignoran solas. El título de cada FormApp.create(...) se guarda como la sección de sus preguntas." }),
       area,
       el("div", { class: "form-actions" }, [procesar]),
       err
     ]);
   }
 
+  // Si se está editando una pregunta de la vista previa, solo se muestra ese formulario.
   if (scriptEditando !== null) return formEdicionPreview(scriptEditando);
 
+  // Paso 2: vista previa con posibilidad de editar/quitar y elegir materia.
   var errores = scriptPreview.filter(function (p) { return p._error; }).length;
   var cont = el("div");
   cont.appendChild(el("div", { class: "toolbar" }, [
@@ -507,7 +646,8 @@ function vistaImportar() {
     quitar.onclick = function () { scriptPreview.splice(i, 1); render(); };
     var filas = [el("div", { style: "display:flex; justify-content:space-between; gap:8px; align-items:start;" }, [
       el("div", null, [
-        el("strong", { text: (p.orden + ". ") + (p.texto || "(sin texto)") }),
+        p.seccion ? el("span", { class: "chip", text: p.seccion }) : null,
+        el("div", null, [el("strong", { text: (p.orden + ". ") + (p.texto || "(sin texto)") })]),
         p._error
           ? el("p", { class: "err", text: p._error })
           : el("div", { class: "muted", style: "margin-top:4px; font-size:13.5px;" }, p.opciones.map(function (o, oi) {
@@ -518,6 +658,13 @@ function vistaImportar() {
     ])];
     cont.appendChild(el("div", { class: "card", style: "margin-bottom:10px;" }, filas));
   });
+
+  // NUEVO: selector de materia destino. Por defecto la primera materia, para
+  // que el caso común (una sola materia) no requiera un paso extra.
+  if (scriptMateria === "" && materias.length) scriptMateria = String(materias[0].id);
+  var materiaSel = selectorMaterias(scriptMateria, false);
+  materiaSel.onchange = function () { scriptMateria = materiaSel.value; };
+  cont.appendChild(el("div", { style: "margin:14px 0 0;" }, [el("label", { text: "Materia destino" }), materiaSel]));
 
   var reemplazar = el("input", { type: "checkbox" });
   reemplazar.checked = scriptReemplazar;
@@ -530,13 +677,14 @@ function vistaImportar() {
   descartar.onclick = function () { scriptPreview = null; scriptEditando = null; scriptErrorGuardado = ""; render(); };
 
   cont.appendChild(el("div", { style: "display:flex; align-items:center; gap:8px; margin:14px 0;" }, [
-    reemplazar, el("span", { text: "Reemplazar el examen activo actual (desactiva las preguntas activas de hoy)" })
+    reemplazar, el("span", { text: "Reemplazar el examen activo de esta materia (desactiva sus preguntas activas actuales)" })
   ]));
   if (scriptErrorGuardado) cont.appendChild(el("p", { class: "err", text: scriptErrorGuardado }));
   cont.appendChild(el("div", { class: "form-actions" }, [confirmar, descartar]));
   return cont;
 }
 
+// Estructura general del panel: barra superior, pestañas y contenido.
 function pantallaPanel() {
   var tabPreg = el("button", { class: "tab" + (tab === "preguntas" ? " on" : ""), text: "Preguntas" });
   var tabImp = el("button", { class: "tab" + (tab === "importar" ? " on" : ""), text: "Importar" });
@@ -557,9 +705,11 @@ function pantallaPanel() {
   app.appendChild(contenido);
 }
 
+// Punto de entrada: sin sesión -> login; con sesión -> recarga los datos
+// (materias, preguntas, resultados) y dibuja el panel.
 function render() {
   if (!session) { pantallaLogin(); return; }
-  Promise.all([cargarPreguntas(), cargarResultados()]).then(pantallaPanel).catch(function (e) {
+  Promise.all([cargarMaterias(), cargarPreguntas(), cargarResultados()]).then(pantallaPanel).catch(function (e) {
     app.innerHTML = "";
     app.appendChild(el("div", { class: "wrap" }, [el("div", { class: "empty", text: "Error: " + e.message })]));
   });
