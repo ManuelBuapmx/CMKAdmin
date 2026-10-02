@@ -41,7 +41,9 @@ Tablas que usa:
 - `alumnos`: SELECT, INSERT, UPDATE, DELETE. La importación por CSV usa *upsert*, que necesita INSERT **y** UPDATE.
 - `resultados`: SELECT, DELETE.
 
-Además, la columna `alumnos.activo` debe tener `default true`, porque la importación por CSV no la envía.
+Además, la columna `alumnos.activo` debe tener `default true`, porque la importación por CSV no la envía. Verificado el 2/oct/2026: ya la tiene, y las políticas de admin (limitadas al correo del profesor) existen para `alumnos`, `preguntas`, `materias` y `resultados`.
+
+**Alumno de prueba** (cargado en Supabase y usado como ejemplo en el panel): `123456 · ROBLES GONZÁLEZ JOSÉ MANUEL · 10B`.
 
 El rol `anon` **no** debe tener lectura sobre `alumnos`: la app del alumno solo usa las funciones RPC `validar_matricula` y `calificar_examen`.
 
@@ -119,3 +121,4 @@ Tabla con alumno, matrícula, grupo, materia, puntaje y fecha. Los resultados an
 ## Historial de cambios
 
 - **1/oct/2026** — README inicial del repo. El panel incluye pestañas Preguntas, Alumnos (con importación CSV), Importar y Resultados (con matrícula y grupo), y la identidad visual PRISMAL MESH (tema oscuro, fuente Inter).
+- **2/oct/2026** — `admin.html`: ejemplo del CSV con el alumno de prueba real (`123456 · ROBLES GONZÁLEZ JOSÉ MANUEL · 10B`) y comentario que lo explica. Se corrigió el archivo publicado, que había quedado con marcadores de conflicto de merge sin resolver. El mismo alumno se cargó en la tabla `alumnos` de Supabase.

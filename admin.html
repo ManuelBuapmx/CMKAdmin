@@ -13,12 +13,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-<<<<<<< HEAD
   /* Identidad visual PRISMAL MESH: tema oscuro único. Para cambiar la marca basta
      editar estas variables (acento, fondos, texto). */
-=======
-  /* Colores como variables para poder tener tema claro y oscuro con el mismo CSS. */
->>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
   :root {
     --bg: #121212;          /* fondo principal */
     --paper: #1e1e1e;       /* contenedores */
@@ -35,52 +31,18 @@
     padding-top: env(safe-area-inset-top, 0px);
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
-<<<<<<< HEAD
-=======
-  /* Tema oscuro automático según el sistema, salvo que se fuerce el claro. */
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #14180f;
-      --paper: #1c211a;
-      --ink: #e9ece5;
-      --muted: #9aa290;
-      --line: #33392c;
-      --green: #6fae7f;
-      --green-dark: #8fc79c;
-      --gold: #d9b354;
-      --red: #e2857e;
-    }
-  }
-  /* Tema oscuro forzado (por si se quiere activar a mano con data-theme). */
-  :root[data-theme="dark"] {
-    --bg: #14180f;
-    --paper: #1c211a;
-    --ink: #e9ece5;
-    --muted: #9aa290;
-    --line: #33392c;
-    --green: #6fae7f;
-    --green-dark: #8fc79c;
-    --gold: #d9b354;
-    --red: #e2857e;
-  }
->>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
   html { scroll-padding-top: env(safe-area-inset-top, 0px); height: 100%; }
   * { box-sizing: border-box; }
   body {
     margin: 0; height: 100%; background: var(--bg); color: var(--ink);
     font-family: Inter, Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
-<<<<<<< HEAD
   /* Barra superior: logo (placeholder), título y cerrar sesión. */
-=======
-  /* Barra superior con el título y el botón de cerrar sesión. */
->>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
   .topbar {
     background: var(--paper); border-bottom: 1px solid var(--line); padding: 12px 20px;
     padding-top: calc(12px + env(safe-area-inset-top, 0px));
     display: flex; align-items: center; justify-content: space-between; gap: 12px;
   }
-<<<<<<< HEAD
   .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
   /* Placeholder del logo: sin src muestra el texto alternativo. Para activarlo:
      <img class="logo" src="logo.svg" alt="Logo PRISMAL MESH"> */
@@ -90,13 +52,6 @@
   /* Contenedor central del contenido (ancho máximo para que se lea bien). */
   .wrap { max-width: 920px; margin: 0 auto; padding: 20px; }
   .tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid var(--line); overflow-x: auto; }
-=======
-  .topbar h1 { font-family: Georgia, "Times New Roman", serif; font-size: 19px; font-weight: 600; margin: 0; }
-  .topbar button { background: transparent; border: 1px solid rgba(255,255,255,.4); color: #f3f4f1; }
-  /* Contenedor central del contenido (ancho máximo para que se lea bien). */
-  .wrap { max-width: 860px; margin: 0 auto; padding: 20px; }
-  .tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid var(--line); }
->>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
   .tab {
     background: none; border: none; padding: 10px 4px; margin-right: 20px; font-size: 15px;
     color: var(--muted); border-bottom: 2px solid transparent; border-radius: 0; width: auto; white-space: nowrap;
@@ -112,11 +67,7 @@
   button:disabled { opacity: .5; cursor: default; }
   input, select, textarea {
     font-size: 15px; padding: 9px 10px; border: 1px solid var(--line); border-radius: var(--radius);
-<<<<<<< HEAD
     background: var(--bg); color: var(--ink); width: 100%; font-family: inherit;
-=======
-    background: var(--paper); color: var(--ink); width: 100%; font-family: inherit;
->>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
   }
   input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
   input:disabled { opacity: .6; }
@@ -137,18 +88,12 @@
   .muted { color: var(--muted); }
   .row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
   .row-actions button { padding: 5px 9px; font-size: 13px; }
-<<<<<<< HEAD
   .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
   .toolbar .grupo-btn { display: flex; gap: 8px; }
   /* El selector dentro de la barra no debe ocupar todo el ancho. */
   .toolbar select { width: auto; max-width: 50%; }
   .filtros { display: flex; gap: 10px; margin-bottom: 14px; }
   .filtros select { width: auto; min-width: 170px; }
-=======
-  .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
-  /* El selector de materia dentro de la barra no debe ocupar todo el ancho. */
-  .toolbar select { width: auto; max-width: 50%; }
->>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
   .opciones-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
   .opcion-row { display: flex; align-items: center; gap: 8px; }
   .opcion-row input[type="radio"] { width: auto; }
@@ -160,12 +105,8 @@
   .estado-inactiva { color: var(--muted); }
   .empty { text-align: center; color: var(--muted); padding: 30px 10px; }
   /* Etiqueta pequeña para mostrar la sección de una pregunta en las listas. */
-<<<<<<< HEAD
   .chip { display: inline-block; font-size: 12px; color: var(--accent); border: 1px solid var(--line); border-radius: 10px; padding: 1px 8px; margin-top: 4px; }
   .mono { font-family: ui-monospace, Menlo, Consolas, monospace; }
-=======
-  .chip { display: inline-block; font-size: 12px; color: var(--green); border: 1px solid var(--line); border-radius: 10px; padding: 1px 8px; margin-top: 4px; }
->>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
 </style>
 </head>
 <body>
@@ -180,7 +121,6 @@ var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 
 var app = document.getElementById("app");
 var session = null;        // { access_token } del profesor, o null si no ha entrado
-<<<<<<< HEAD
 var tab = "preguntas";     // pestaña visible: preguntas | alumnos | importar | resultados
 var materias = [];         // lista de materias (para los selectores)
 var preguntas = [];        // todas las preguntas (activas e inactivas)
@@ -188,14 +128,6 @@ var resultados = [];       // resultados de los exámenes contestados
 var alumnos = [];          // lista de alumnos autorizados (tabla alumnos)
 var editando = null;       // id de la pregunta en edición, o "nueva", o null
 var materiaFiltro = "";    // id de materia por la que se filtra la lista ("" = todas)
-=======
-var tab = "preguntas";     // pestaña visible: preguntas | importar | resultados
-var materias = [];         // NUEVO: lista de materias (para los selectores)
-var preguntas = [];        // todas las preguntas (activas e inactivas)
-var resultados = [];       // resultados de los exámenes contestados
-var editando = null;       // id de la pregunta en edición, o "nueva", o null
-var materiaFiltro = "";    // NUEVO: id de materia por la que se filtra la lista ("" = todas)
->>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
 
 // --- Importar examen por script ---
 var scriptTexto = "";            // texto pegado por el profesor
@@ -204,7 +136,6 @@ var scriptEditando = null;       // índice (en scriptPreview) en edición, o nu
 var scriptReemplazar = true;     // desactivar las preguntas activas de la materia al confirmar
 var scriptGuardando = false;     // true mientras se envía a Supabase
 var scriptErrorGuardado = "";    // mensaje de error al guardar/procesar
-<<<<<<< HEAD
 var scriptMateria = "";          // id de la materia destino de la importación
 
 // --- Alumnos ---
@@ -218,10 +149,6 @@ var csvGuardando = false;        // true mientras se envía a Supabase
 var csvError = "";               // error al procesar/guardar el CSV
 var csvMsg = "";                 // aviso de éxito (se muestra una vez en la lista)
 
-=======
-var scriptMateria = "";          // NUEVO: id de la materia destino de la importación
-
->>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
 // Recupera la sesión guardada (si el profesor ya había entrado antes).
 try {
   var guardada = localStorage.getItem("cmk_session");
@@ -259,7 +186,6 @@ function api(path, opciones) {
     });
 }
 
-<<<<<<< HEAD
 // Escritura sobre "alumnos" que EXIGE confirmación de filas afectadas.
 // Con RLS, un UPDATE/DELETE sin permiso no da error: afecta 0 filas. Se pide
 // return=representation y se verifica que volvió al menos una fila, para no
@@ -276,8 +202,6 @@ function escribirAlumnos(path, opciones) {
   });
 }
 
-=======
->>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
 // Inicio de sesión con correo y contraseña (Supabase Auth).
 function iniciarSesion(correo, clave, onError) {
   fetch(SUPABASE_URL + "/auth/v1/token?grant_type=password", {
@@ -300,11 +224,7 @@ function cerrarSesion() {
   render();
 }
 
-<<<<<<< HEAD
 // Carga las materias (el profesor ve todas, también las inactivas).
-=======
-// NUEVO: carga las materias (el profesor ve todas, también las inactivas).
->>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
 function cargarMaterias() {
   return api("/rest/v1/materias?select=id,nombre,activa&order=orden.asc").then(function (filas) { materias = filas; });
 }
@@ -342,44 +262,13 @@ function valorMateria(select) {
   return select.value === "" ? null : Number(select.value);
 }
 
-// NUEVO: nombre legible de una materia a partir de su id (para las tablas).
-// Si la pregunta no tiene materia (materia_id vacío) lo dice explícitamente,
-// porque esas preguntas NO aparecen en la app del alumno.
-function nombreMateria(id) {
-  if (id === null || id === undefined) return "⚠ Sin materia";
-  var m = materias.find(function (x) { return String(x.id) === String(id); });
-  return m ? m.nombre : "Materia " + id;
-}
-
-// NUEVO: crea un <select> con las materias. "seleccionada" es el id preseleccionado.
-// Se devuelve el elemento; el id elegido se lee con valorMateria(select).
-function selectorMaterias(seleccionada, conOpcionTodas) {
-  var s = el("select");
-  if (conOpcionTodas) s.appendChild(el("option", { value: "", text: "Todas las materias" }));
-  materias.forEach(function (m) { s.appendChild(el("option", { value: String(m.id), text: m.nombre })); });
-  s.value = seleccionada === null || seleccionada === undefined ? "" : String(seleccionada);
-  return s;
-}
-// Convierte el valor del <select> en el id real (número) o null si está vacío.
-// materia_id es bigint en la base, por eso se manda como número.
-function valorMateria(select) {
-  return select.value === "" ? null : Number(select.value);
-}
-
 // El script se escribe (o se pega, casi tal cual) como un Apps Script de Google Forms:
 // se usa FormApp.create(...), exam.addMultipleChoiceItem(), item.setTitle(...),
 // item.createChoice(valor, esCorrecta) y item.setChoices([...]).
 // Los addTextItem/addListItem (datos del alumno, etc.) se aceptan pero se ignoran,
 // porque ese dato ya lo pide la app del estudiante aparte.
-<<<<<<< HEAD
 // El título de cada FormApp.create(título) se guarda como "seccion" de sus
 // preguntas, y si el script crea VARIOS exámenes se importan todos juntos, en orden.
-=======
-// CAMBIO (1/oct/2026): ahora el título de cada FormApp.create(título) se guarda
-// como "seccion" de sus preguntas (así lo documenta index.html), y si el script
-// crea VARIOS exámenes se importan todos juntos, en orden. Antes solo se
-// importaba el último y se perdía el título.
->>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
 function ejecutarScript(codigo) {
   var examenesGenerados = []; // cada elemento: { titulo, preguntas: [] }
 
@@ -477,7 +366,6 @@ function ejecutarScript(codigo) {
   return todas;
 }
 
-<<<<<<< HEAD
 // Quita acentos y pasa a minúsculas (para comparar encabezados del CSV).
 function normalizar(s) {
   return String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
@@ -549,8 +437,6 @@ function parsearCSV(texto) {
   return { filas: salida, error: null };
 }
 
-=======
->>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
 // Pantalla de login del profesor.
 function pantallaLogin() {
   var correo = el("input", { type: "email", placeholder: "correo@ejemplo.com", autocomplete: "username" });
@@ -578,13 +464,8 @@ function pantallaLogin() {
 }
 
 // Formulario para crear o editar UNA pregunta.
-<<<<<<< HEAD
 // Incluye materia, sección y contexto: sin materia_id la app del alumno
 // (que filtra por materia) no vería esas preguntas.
-=======
-// CAMBIO: ahora incluye materia, sección y contexto. Antes no guardaba
-// materia_id, y la app del alumno (que filtra por materia) no veía esas preguntas.
->>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
 function formPregunta(p) {
   var esNueva = !p || p === "nueva";
   // Materia por defecto para una pregunta nueva: la del filtro activo, o la primera.
@@ -662,11 +543,7 @@ function vistaPreguntas() {
   } else {
     var nuevo = el("button", { text: "+ Nueva pregunta" });
     nuevo.onclick = function () { editando = "nueva"; render(); };
-<<<<<<< HEAD
     // Filtro por materia, para no mezclar exámenes de distintas materias.
-=======
-    // NUEVO: filtro por materia, para no mezclar exámenes de distintas materias.
->>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
     var filtro = selectorMaterias(materiaFiltro, true);
     filtro.onchange = function () { materiaFiltro = filtro.value; render(); };
     var visibles = preguntas.filter(function (p) { return materiaFiltro === "" || String(p.materia_id) === materiaFiltro; });
@@ -708,7 +585,6 @@ function vistaPreguntas() {
   return cont;
 }
 
-<<<<<<< HEAD
 // ---------------------------------------------------------------------------
 // Pestaña "Alumnos": lista autorizada para entrar al examen con su matrícula.
 // La app del alumno NUNCA lee esta tabla (RLS cerrada para anon); solo el admin.
@@ -776,7 +652,10 @@ function vistaImportarAlumnos() {
   // Paso 1: cargar el CSV.
   if (csvPreview === null) {
     var area = el("textarea", {
-      placeholder: "matricula,nombre,grupo\n1234567,Robles González José Manuel,10A\n7654321,Apellido Nombre,10B",
+      // Ejemplo del CSV: la primera fila es el alumno de prueba real (también cargado en la
+      // tabla "alumnos" de Supabase) para que el formato se vea con datos verdaderos; la
+      // segunda es solo ilustrativa.
+      placeholder: "matricula,nombre,grupo\n123456,ROBLES GONZÁLEZ JOSÉ MANUEL,10B\n7654321,Apellido Nombre,10B",
       class: "mono", style: "min-height:220px; font-size:13.5px;"
     });
     area.value = csvTexto;
@@ -944,9 +823,6 @@ function vistaAlumnos() {
 
 // Pestaña "Resultados": exámenes ya contestados, con matrícula y grupo del alumno.
 // Los resultados anteriores a la matrícula no los tienen: se muestra "—".
-=======
-// Pestaña "Resultados": exámenes ya contestados (CAMBIO: se muestra la materia).
->>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
 function vistaResultados() {
   var cont = el("div", { class: "toolbar" }, [el("span", { class: "muted", text: resultados.length + " resultado(s)" })]);
   if (!resultados.length) return el("div", null, [cont, el("div", { class: "empty", text: "Todavía no hay exámenes contestados." })]);
@@ -960,11 +836,8 @@ function vistaResultados() {
     var fecha = new Date(r.creado_en).toLocaleString("es-MX", { dateStyle: "medium", timeStyle: "short" });
     tbody.appendChild(el("tr", null, [
       el("td", { text: r.nombre }),
-<<<<<<< HEAD
       el("td", { class: "num", text: r.matricula || "—" }),
       el("td", { text: r.grupo || "—" }),
-=======
->>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
       el("td", { class: "muted", text: nombreMateria(r.materia_id) }),
       el("td", { class: "num", text: r.correctas + " / " + r.total }),
       el("td", { class: "muted", text: fecha }),
@@ -973,11 +846,7 @@ function vistaResultados() {
   });
   return el("div", null, [cont, el("div", { class: "scroller" }, [
     el("table", null, [
-<<<<<<< HEAD
       el("thead", null, [el("tr", null, [el("th", { text: "Alumno" }), el("th", { text: "Matrícula" }), el("th", { text: "Grupo" }), el("th", { text: "Materia" }), el("th", { text: "Puntaje" }), el("th", { text: "Fecha" }), el("th", { text: "" })])]),
-=======
-      el("thead", null, [el("tr", null, [el("th", { text: "Alumno" }), el("th", { text: "Materia" }), el("th", { text: "Puntaje" }), el("th", { text: "Fecha" }), el("th", { text: "" })])]),
->>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
       tbody
     ])
   ])]);
@@ -1035,18 +904,10 @@ function formEdicionPreview(idx) {
 }
 
 // Guarda en Supabase las preguntas de la vista previa.
-<<<<<<< HEAD
 // (1) cada pregunta lleva materia_id, seccion y contexto;
 // (2) "reemplazar" desactiva SOLO las preguntas activas de la materia elegida;
 // (3) si NO se reemplaza, el orden se corre para quedar después de las preguntas
 // ya existentes de esa materia.
-=======
-// CAMBIOS: (1) cada pregunta lleva materia_id, seccion y contexto;
-// (2) "reemplazar" ahora desactiva SOLO las preguntas activas de la materia
-// elegida (antes desactivaba las de todas las materias); (3) si NO se
-// reemplaza, el orden se corre para quedar después de las preguntas ya
-// existentes de esa materia.
->>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
 function guardarImportacion() {
   var materiaId = scriptMateria === "" ? null : Number(scriptMateria);
   if (materiaId === null) { scriptErrorGuardado = "Elige la materia destino antes de confirmar."; render(); return; }
@@ -1135,11 +996,7 @@ function vistaImportar() {
     cont.appendChild(el("div", { class: "card", style: "margin-bottom:10px;" }, filas));
   });
 
-<<<<<<< HEAD
   // Selector de materia destino. Por defecto la primera materia, para
-=======
-  // NUEVO: selector de materia destino. Por defecto la primera materia, para
->>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
   // que el caso común (una sola materia) no requiera un paso extra.
   if (scriptMateria === "" && materias.length) scriptMateria = String(materias[0].id);
   var materiaSel = selectorMaterias(scriptMateria, false);
@@ -1165,10 +1022,7 @@ function vistaImportar() {
 }
 
 // Estructura general del panel: barra superior, pestañas y contenido.
-<<<<<<< HEAD
 // No consulta la red: solo dibuja con los datos ya cargados (ver render()).
-=======
->>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
 function pantallaPanel() {
   var tabPreg = el("button", { class: "tab" + (tab === "preguntas" ? " on" : ""), text: "Preguntas" });
   var tabAlu = el("button", { class: "tab" + (tab === "alumnos" ? " on" : ""), text: "Alumnos" });
@@ -1203,17 +1057,10 @@ function pantallaPanel() {
 }
 
 // Punto de entrada: sin sesión -> login; con sesión -> recarga los datos
-<<<<<<< HEAD
 // (materias, preguntas, alumnos, resultados) y dibuja el panel.
 function render() {
   if (!session) { pantallaLogin(); return; }
   Promise.all([cargarMaterias(), cargarPreguntas(), cargarAlumnos(), cargarResultados()]).then(pantallaPanel).catch(function (e) {
-=======
-// (materias, preguntas, resultados) y dibuja el panel.
-function render() {
-  if (!session) { pantallaLogin(); return; }
-  Promise.all([cargarMaterias(), cargarPreguntas(), cargarResultados()]).then(pantallaPanel).catch(function (e) {
->>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
     app.innerHTML = "";
     app.appendChild(el("div", { class: "wrap" }, [el("div", { class: "empty", text: "Error: " + e.message })]));
   });
