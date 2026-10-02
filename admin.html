@@ -1,27 +1,42 @@
 <!DOCTYPE html>
+<!--
+  CheckMy Knowledge · Panel de administración
+  Propiedad intelectual de PRISMAL MESH. Todos los derechos reservados.
+-->
 <html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>CheckMyKnowledge · Panel</title>
+<title>CheckMyKnowledge · Panel · PRISMAL MESH</title>
+<!-- Tipografía corporativa (Inter). Si no carga, cae a Roboto o a la fuente del sistema. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+<<<<<<< HEAD
+  /* Identidad visual PRISMAL MESH: tema oscuro único. Para cambiar la marca basta
+     editar estas variables (acento, fondos, texto). */
+=======
   /* Colores como variables para poder tener tema claro y oscuro con el mismo CSS. */
+>>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
   :root {
-    --bg: #f3f4f1;
-    --paper: #ffffff;
-    --ink: #1c231d;
-    --muted: #5b6459;
-    --line: #d7dbd2;
-    --green: #26472f;
-    --green-dark: #17301f;
-    --gold: #b8901f;
-    --red: #a3312a;
-    --radius: 4px;
+    --bg: #121212;          /* fondo principal */
+    --paper: #1e1e1e;       /* contenedores */
+    --ink: #e8e8e8;
+    --muted: #9a9a9a;
+    --line: #2e2e2e;
+    --accent: #00d4ff;      /* acento: botones y acciones */
+    --accent-ink: #04141a;  /* texto sobre el acento (contraste) */
+    --red: #ff6b6b;
+    --radius: 6px;
+    color-scheme: dark;
     box-sizing: border-box;
     /* Respeta las barras del sistema en celulares con muesca. */
     padding-top: env(safe-area-inset-top, 0px);
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
+<<<<<<< HEAD
+=======
   /* Tema oscuro automático según el sistema, salvo que se fuerce el claro. */
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
@@ -48,68 +63,109 @@
     --gold: #d9b354;
     --red: #e2857e;
   }
+>>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
   html { scroll-padding-top: env(safe-area-inset-top, 0px); height: 100%; }
   * { box-sizing: border-box; }
   body {
     margin: 0; height: 100%; background: var(--bg); color: var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: Inter, Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
+<<<<<<< HEAD
+  /* Barra superior: logo (placeholder), título y cerrar sesión. */
+=======
   /* Barra superior con el título y el botón de cerrar sesión. */
+>>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
   .topbar {
-    background: var(--green-dark); color: #f3f4f1; padding: 14px 20px;
-    padding-top: calc(14px + env(safe-area-inset-top, 0px));
+    background: var(--paper); border-bottom: 1px solid var(--line); padding: 12px 20px;
+    padding-top: calc(12px + env(safe-area-inset-top, 0px));
     display: flex; align-items: center; justify-content: space-between; gap: 12px;
   }
+<<<<<<< HEAD
+  .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  /* Placeholder del logo: sin src muestra el texto alternativo. Para activarlo:
+     <img class="logo" src="logo.svg" alt="Logo PRISMAL MESH"> */
+  .logo { height: 28px; min-width: 28px; font-size: 12px; color: var(--muted); }
+  .topbar h1 { font-size: 17px; font-weight: 600; margin: 0; letter-spacing: .2px; }
+  .topbar button { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+  /* Contenedor central del contenido (ancho máximo para que se lea bien). */
+  .wrap { max-width: 920px; margin: 0 auto; padding: 20px; }
+  .tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+=======
   .topbar h1 { font-family: Georgia, "Times New Roman", serif; font-size: 19px; font-weight: 600; margin: 0; }
   .topbar button { background: transparent; border: 1px solid rgba(255,255,255,.4); color: #f3f4f1; }
   /* Contenedor central del contenido (ancho máximo para que se lea bien). */
   .wrap { max-width: 860px; margin: 0 auto; padding: 20px; }
   .tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid var(--line); }
+>>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
   .tab {
     background: none; border: none; padding: 10px 4px; margin-right: 20px; font-size: 15px;
-    color: var(--muted); border-bottom: 2px solid transparent; border-radius: 0; width: auto;
+    color: var(--muted); border-bottom: 2px solid transparent; border-radius: 0; width: auto; white-space: nowrap;
   }
-  .tab.on { color: var(--ink); border-bottom-color: var(--green); font-weight: 600; }
+  .tab.on { color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
   button {
-    cursor: pointer; font-size: 14px; padding: 9px 14px; border-radius: var(--radius);
-    border: 1px solid var(--green); background: var(--green); color: #fff;
+    cursor: pointer; font-size: 14px; font-weight: 500; padding: 9px 14px; border-radius: var(--radius);
+    border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); font-family: inherit;
   }
+  button:hover:not(:disabled) { filter: brightness(1.1); }
   button.secondary { background: transparent; color: var(--ink); border-color: var(--line); }
   button.danger { background: transparent; color: var(--red); border-color: var(--red); }
   button:disabled { opacity: .5; cursor: default; }
   input, select, textarea {
     font-size: 15px; padding: 9px 10px; border: 1px solid var(--line); border-radius: var(--radius);
+<<<<<<< HEAD
+    background: var(--bg); color: var(--ink); width: 100%; font-family: inherit;
+=======
     background: var(--paper); color: var(--ink); width: 100%; font-family: inherit;
+>>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
   }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
+  input:disabled { opacity: .6; }
   label { display: block; font-size: 13px; color: var(--muted); margin: 10px 0 4px; }
   .card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
   .login-shell { min-height: 100%; display: flex; align-items: center; justify-content: center; padding: 20px; }
   .login-shell .card { width: 100%; max-width: 340px; }
-  .login-shell h1 { font-family: Georgia, serif; font-size: 21px; margin: 0 0 4px; }
+  .login-shell h1 { font-size: 21px; font-weight: 600; margin: 8px 0 4px; }
   .login-shell p.sub { color: var(--muted); font-size: 13.5px; margin: 0 0 18px; }
   .err { color: var(--red); font-size: 13.5px; margin-top: 10px; min-height: 1em; }
+  .ok { color: var(--accent); font-size: 13.5px; margin: 0 0 12px; }
   table { width: 100%; border-collapse: collapse; font-size: 14px; }
   th { text-align: left; color: var(--muted); font-weight: 600; font-size: 12px; text-transform: none; padding: 6px 8px; border-bottom: 1px solid var(--line); }
   td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
   tr:last-child td { border-bottom: none; }
+  tr.fila-error td { color: var(--red); }
   .num { font-variant-numeric: tabular-nums; }
   .muted { color: var(--muted); }
-  .row-actions { display: flex; gap: 6px; }
+  .row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
   .row-actions button { padding: 5px 9px; font-size: 13px; }
+<<<<<<< HEAD
+  .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+  .toolbar .grupo-btn { display: flex; gap: 8px; }
+  /* El selector dentro de la barra no debe ocupar todo el ancho. */
+  .toolbar select { width: auto; max-width: 50%; }
+  .filtros { display: flex; gap: 10px; margin-bottom: 14px; }
+  .filtros select { width: auto; min-width: 170px; }
+=======
   .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
   /* El selector de materia dentro de la barra no debe ocupar todo el ancho. */
   .toolbar select { width: auto; max-width: 50%; }
+>>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
   .opciones-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
   .opcion-row { display: flex; align-items: center; gap: 8px; }
   .opcion-row input[type="radio"] { width: auto; }
   .opcion-row input[type="text"] { flex: 1; }
-  .form-actions { display: flex; gap: 8px; margin-top: 16px; }
+  .form-actions { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
   .scroller { overflow-x: auto; }
-  .estado-activa { color: var(--green); font-weight: 600; }
+  .scroller-alto { max-height: 360px; overflow: auto; margin-top: 12px; border: 1px solid var(--line); border-radius: var(--radius); }
+  .estado-activa { color: var(--accent); font-weight: 600; }
   .estado-inactiva { color: var(--muted); }
   .empty { text-align: center; color: var(--muted); padding: 30px 10px; }
   /* Etiqueta pequeña para mostrar la sección de una pregunta en las listas. */
+<<<<<<< HEAD
+  .chip { display: inline-block; font-size: 12px; color: var(--accent); border: 1px solid var(--line); border-radius: 10px; padding: 1px 8px; margin-top: 4px; }
+  .mono { font-family: ui-monospace, Menlo, Consolas, monospace; }
+=======
   .chip { display: inline-block; font-size: 12px; color: var(--green); border: 1px solid var(--line); border-radius: 10px; padding: 1px 8px; margin-top: 4px; }
+>>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
 </style>
 </head>
 <body>
@@ -124,12 +180,22 @@ var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 
 var app = document.getElementById("app");
 var session = null;        // { access_token } del profesor, o null si no ha entrado
+<<<<<<< HEAD
+var tab = "preguntas";     // pestaña visible: preguntas | alumnos | importar | resultados
+var materias = [];         // lista de materias (para los selectores)
+var preguntas = [];        // todas las preguntas (activas e inactivas)
+var resultados = [];       // resultados de los exámenes contestados
+var alumnos = [];          // lista de alumnos autorizados (tabla alumnos)
+var editando = null;       // id de la pregunta en edición, o "nueva", o null
+var materiaFiltro = "";    // id de materia por la que se filtra la lista ("" = todas)
+=======
 var tab = "preguntas";     // pestaña visible: preguntas | importar | resultados
 var materias = [];         // NUEVO: lista de materias (para los selectores)
 var preguntas = [];        // todas las preguntas (activas e inactivas)
 var resultados = [];       // resultados de los exámenes contestados
 var editando = null;       // id de la pregunta en edición, o "nueva", o null
 var materiaFiltro = "";    // NUEVO: id de materia por la que se filtra la lista ("" = todas)
+>>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
 
 // --- Importar examen por script ---
 var scriptTexto = "";            // texto pegado por el profesor
@@ -138,8 +204,24 @@ var scriptEditando = null;       // índice (en scriptPreview) en edición, o nu
 var scriptReemplazar = true;     // desactivar las preguntas activas de la materia al confirmar
 var scriptGuardando = false;     // true mientras se envía a Supabase
 var scriptErrorGuardado = "";    // mensaje de error al guardar/procesar
+<<<<<<< HEAD
+var scriptMateria = "";          // id de la materia destino de la importación
+
+// --- Alumnos ---
+var alumnoEditando = null;       // matrícula en edición, "nuevo", o null
+var alumnoBusqueda = "";         // texto de búsqueda (matrícula o nombre)
+var alumnoGrupoFiltro = "";      // grupo por el que se filtra ("" = todos)
+var alumnoModo = "lista";        // "lista" | "importar" (importación CSV)
+var csvTexto = "";               // CSV pegado o leído de archivo
+var csvPreview = null;           // filas parseadas, o null si aún no se procesa
+var csvGuardando = false;        // true mientras se envía a Supabase
+var csvError = "";               // error al procesar/guardar el CSV
+var csvMsg = "";                 // aviso de éxito (se muestra una vez en la lista)
+
+=======
 var scriptMateria = "";          // NUEVO: id de la materia destino de la importación
 
+>>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
 // Recupera la sesión guardada (si el profesor ya había entrado antes).
 try {
   var guardada = localStorage.getItem("cmk_session");
@@ -177,6 +259,25 @@ function api(path, opciones) {
     });
 }
 
+<<<<<<< HEAD
+// Escritura sobre "alumnos" que EXIGE confirmación de filas afectadas.
+// Con RLS, un UPDATE/DELETE sin permiso no da error: afecta 0 filas. Se pide
+// return=representation y se verifica que volvió al menos una fila, para no
+// fingir éxito. "opciones.headers.Prefer" puede sobrescribirse (p. ej. upsert).
+function escribirAlumnos(path, opciones) {
+  opciones = opciones || {};
+  opciones.headers = Object.assign({
+    "Content-Type": "application/json",
+    Prefer: "return=representation"
+  }, opciones.headers || {});
+  return api(path, opciones).then(function (filas) {
+    if (!filas || !filas.length) throw new Error("La base no aplicó el cambio (revisa permisos RLS o que el alumno exista).");
+    return filas;
+  });
+}
+
+=======
+>>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
 // Inicio de sesión con correo y contraseña (Supabase Auth).
 function iniciarSesion(correo, clave, onError) {
   fetch(SUPABASE_URL + "/auth/v1/token?grant_type=password", {
@@ -199,7 +300,11 @@ function cerrarSesion() {
   render();
 }
 
+<<<<<<< HEAD
+// Carga las materias (el profesor ve todas, también las inactivas).
+=======
 // NUEVO: carga las materias (el profesor ve todas, también las inactivas).
+>>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
 function cargarMaterias() {
   return api("/rest/v1/materias?select=id,nombre,activa&order=orden.asc").then(function (filas) { materias = filas; });
 }
@@ -208,6 +313,33 @@ function cargarPreguntas() {
 }
 function cargarResultados() {
   return api("/rest/v1/resultados?select=*&order=creado_en.desc").then(function (filas) { resultados = filas; });
+}
+function cargarAlumnos() {
+  return api("/rest/v1/alumnos?select=*&order=nombre.asc").then(function (filas) { alumnos = filas; });
+}
+
+// Nombre legible de una materia a partir de su id (para las tablas).
+// Si la pregunta no tiene materia (materia_id vacío) lo dice explícitamente,
+// porque esas preguntas NO aparecen en la app del alumno.
+function nombreMateria(id) {
+  if (id === null || id === undefined) return "⚠ Sin materia";
+  var m = materias.find(function (x) { return String(x.id) === String(id); });
+  return m ? m.nombre : "Materia " + id;
+}
+
+// Crea un <select> con las materias. "seleccionada" es el id preseleccionado.
+// Se devuelve el elemento; el id elegido se lee con valorMateria(select).
+function selectorMaterias(seleccionada, conOpcionTodas) {
+  var s = el("select");
+  if (conOpcionTodas) s.appendChild(el("option", { value: "", text: "Todas las materias" }));
+  materias.forEach(function (m) { s.appendChild(el("option", { value: String(m.id), text: m.nombre })); });
+  s.value = seleccionada === null || seleccionada === undefined ? "" : String(seleccionada);
+  return s;
+}
+// Convierte el valor del <select> en el id real (número) o null si está vacío.
+// materia_id es bigint en la base, por eso se manda como número.
+function valorMateria(select) {
+  return select.value === "" ? null : Number(select.value);
 }
 
 // NUEVO: nombre legible de una materia a partir de su id (para las tablas).
@@ -239,10 +371,15 @@ function valorMateria(select) {
 // item.createChoice(valor, esCorrecta) y item.setChoices([...]).
 // Los addTextItem/addListItem (datos del alumno, etc.) se aceptan pero se ignoran,
 // porque ese dato ya lo pide la app del estudiante aparte.
+<<<<<<< HEAD
+// El título de cada FormApp.create(título) se guarda como "seccion" de sus
+// preguntas, y si el script crea VARIOS exámenes se importan todos juntos, en orden.
+=======
 // CAMBIO (1/oct/2026): ahora el título de cada FormApp.create(título) se guarda
 // como "seccion" de sus preguntas (así lo documenta index.html), y si el script
 // crea VARIOS exámenes se importan todos juntos, en orden. Antes solo se
 // importaba el último y se perdía el título.
+>>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
 function ejecutarScript(codigo) {
   var examenesGenerados = []; // cada elemento: { titulo, preguntas: [] }
 
@@ -340,6 +477,80 @@ function ejecutarScript(codigo) {
   return todas;
 }
 
+<<<<<<< HEAD
+// Quita acentos y pasa a minúsculas (para comparar encabezados del CSV).
+function normalizar(s) {
+  return String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+}
+
+// Parser CSV propio (sin librerías): detecta el separador (coma, punto y coma o
+// tabulador; Excel en español exporta con ";"), respeta comillas y acepta
+// encabezado opcional "matricula,nombre,grupo" en cualquier orden. Sin
+// encabezado se asume el orden matricula, nombre, grupo.
+// Regresa { filas, error }. Cada fila: { matricula, nombre, grupo, _error }.
+function parsearCSV(texto) {
+  texto = String(texto).replace(/^\uFEFF/, ""); // BOM que agrega Excel
+  var primera = texto.split(/\r?\n/).filter(function (l) { return l.trim() !== ""; })[0];
+  if (!primera) return { filas: null, error: "El CSV está vacío." };
+
+  // Separador = el más frecuente en la primera línea (fuera de comillas).
+  var cuenta = { ";": 0, ",": 0, "\t": 0 }, enComillas = false;
+  for (var j = 0; j < primera.length; j++) {
+    var ch = primera.charAt(j);
+    if (ch === '"') enComillas = !enComillas;
+    else if (!enComillas && cuenta.hasOwnProperty(ch)) cuenta[ch]++;
+  }
+  var delim = ",";
+  if (cuenta[";"] > cuenta[delim]) delim = ";";
+  if (cuenta["\t"] > cuenta[delim]) delim = "\t";
+
+  // Máquina de estados: campos, filas y comillas dobles escapadas ("").
+  var filas = [], fila = [], campo = "", q = false;
+  for (var i = 0; i < texto.length; i++) {
+    var c = texto.charAt(i);
+    if (q) {
+      if (c === '"') { if (texto.charAt(i + 1) === '"') { campo += '"'; i++; } else q = false; }
+      else campo += c;
+    } else if (c === '"') q = true;
+    else if (c === delim) { fila.push(campo); campo = ""; }
+    else if (c === "\n" || c === "\r") {
+      if (c === "\r" && texto.charAt(i + 1) === "\n") i++;
+      fila.push(campo); campo = ""; filas.push(fila); fila = [];
+    } else campo += c;
+  }
+  fila.push(campo); filas.push(fila);
+  filas = filas.filter(function (f) { return f.some(function (x) { return x.trim() !== ""; }); });
+
+  // Encabezado opcional: si la primera celda es "matricula" se exige el trío completo.
+  var iM = 0, iN = 1, iG = 2;
+  var h = filas[0].map(normalizar);
+  if (h.indexOf("matricula") >= 0) {
+    iM = h.indexOf("matricula"); iN = h.indexOf("nombre"); iG = h.indexOf("grupo");
+    if (iN < 0 || iG < 0) return { filas: null, error: "El encabezado debe incluir matricula, nombre y grupo." };
+    filas.shift();
+  }
+  if (!filas.length) return { filas: null, error: "El CSV solo tiene encabezado, sin alumnos." };
+
+  var vistas = {};
+  var salida = filas.map(function (f) {
+    var a = {
+      matricula: String(f[iM] || "").replace(/\s+/g, ""),
+      nombre: String(f[iN] || "").trim().replace(/\s+/g, " "),
+      grupo: String(f[iG] || "").trim(),
+      _error: null
+    };
+    if (!a.matricula) a._error = "Falta la matrícula.";
+    else if (!a.nombre) a._error = "Falta el nombre.";
+    else if (!a.grupo) a._error = "Falta el grupo.";
+    else if (vistas[a.matricula]) a._error = "Matrícula repetida en el archivo.";
+    if (a.matricula) vistas[a.matricula] = true;
+    return a;
+  });
+  return { filas: salida, error: null };
+}
+
+=======
+>>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
 // Pantalla de login del profesor.
 function pantallaLogin() {
   var correo = el("input", { type: "email", placeholder: "correo@ejemplo.com", autocomplete: "username" });
@@ -354,6 +565,8 @@ function pantallaLogin() {
     });
   };
   var card = el("div", { class: "card" }, [
+    // Placeholder del logo PRISMAL MESH (agregar src="logo.svg" cuando esté el SVG).
+    el("img", { class: "logo", alt: "Logo PRISMAL MESH" }),
     el("h1", { text: "CheckMyKnowledge" }),
     el("p", { class: "sub", text: "Panel de administración" }),
     el("label", { text: "Correo" }), correo,
@@ -365,8 +578,13 @@ function pantallaLogin() {
 }
 
 // Formulario para crear o editar UNA pregunta.
+<<<<<<< HEAD
+// Incluye materia, sección y contexto: sin materia_id la app del alumno
+// (que filtra por materia) no vería esas preguntas.
+=======
 // CAMBIO: ahora incluye materia, sección y contexto. Antes no guardaba
 // materia_id, y la app del alumno (que filtra por materia) no veía esas preguntas.
+>>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
 function formPregunta(p) {
   var esNueva = !p || p === "nueva";
   // Materia por defecto para una pregunta nueva: la del filtro activo, o la primera.
@@ -444,7 +662,11 @@ function vistaPreguntas() {
   } else {
     var nuevo = el("button", { text: "+ Nueva pregunta" });
     nuevo.onclick = function () { editando = "nueva"; render(); };
+<<<<<<< HEAD
+    // Filtro por materia, para no mezclar exámenes de distintas materias.
+=======
     // NUEVO: filtro por materia, para no mezclar exámenes de distintas materias.
+>>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
     var filtro = selectorMaterias(materiaFiltro, true);
     filtro.onchange = function () { materiaFiltro = filtro.value; render(); };
     var visibles = preguntas.filter(function (p) { return materiaFiltro === "" || String(p.materia_id) === materiaFiltro; });
@@ -486,7 +708,245 @@ function vistaPreguntas() {
   return cont;
 }
 
+<<<<<<< HEAD
+// ---------------------------------------------------------------------------
+// Pestaña "Alumnos": lista autorizada para entrar al examen con su matrícula.
+// La app del alumno NUNCA lee esta tabla (RLS cerrada para anon); solo el admin.
+// ---------------------------------------------------------------------------
+
+// Grupos distintos presentes en la lista (para el filtro).
+function gruposDeAlumnos() {
+  var vistos = {};
+  alumnos.forEach(function (a) { vistos[a.grupo] = true; });
+  return Object.keys(vistos).sort();
+}
+
+// Alta o edición de UN alumno. La matrícula es la llave primaria: se fija al
+// crear y no se edita después (para cambiarla: borrar y crear de nuevo).
+function formAlumno(ref) {
+  var esNuevo = ref === "nuevo";
+  var base = esNuevo
+    ? { matricula: "", nombre: "", grupo: alumnoGrupoFiltro || "", activo: true }
+    : alumnos.find(function (x) { return x.matricula === ref; });
+  if (!base) { alumnoEditando = null; return vistaAlumnos(); } // el alumno ya no existe
+  var matricula = el("input", { type: "text", value: base.matricula, placeholder: "Matrícula", autocomplete: "off" });
+  if (!esNuevo) matricula.setAttribute("disabled", "disabled");
+  var nombre = el("input", { type: "text", value: base.nombre, placeholder: "Apellidos y nombre" });
+  var grupo = el("input", { type: "text", value: base.grupo, placeholder: "Ej. 10A" });
+  var activo = el("input", { type: "checkbox" });
+  activo.checked = base.activo;
+  var err = el("p", { class: "err" });
+
+  var guardar = el("button", { text: "Guardar" });
+  guardar.onclick = function () {
+    var m = esNuevo ? matricula.value.replace(/\s+/g, "") : base.matricula;
+    var n = nombre.value.trim().replace(/\s+/g, " ");
+    var g = grupo.value.trim();
+    if (!m || !n || !g) { err.textContent = "Completa matrícula, nombre y grupo."; return; }
+    guardar.disabled = true;
+    var peticion = esNuevo
+      ? escribirAlumnos("/rest/v1/alumnos", { method: "POST", body: JSON.stringify({ matricula: m, nombre: n, grupo: g, activo: activo.checked }) })
+      : escribirAlumnos("/rest/v1/alumnos?matricula=eq." + encodeURIComponent(m), { method: "PATCH", body: JSON.stringify({ nombre: n, grupo: g, activo: activo.checked }) });
+    peticion.then(function () { alumnoEditando = null; return cargarAlumnos(); }).then(pantallaPanel)
+      .catch(function (e) {
+        err.textContent = /duplicate|23505/i.test(e.message) ? "Esa matrícula ya existe." : "No se pudo guardar: " + e.message;
+        guardar.disabled = false;
+      });
+  };
+  var cancelar = el("button", { class: "secondary", text: "Cancelar" });
+  cancelar.onclick = function () { alumnoEditando = null; pantallaPanel(); };
+
+  return el("div", { class: "card", style: "margin-bottom:16px;" }, [
+    el("label", { text: "Matrícula" + (esNuevo ? "" : " (no editable)") }), matricula,
+    el("label", { text: "Nombre" }), nombre,
+    el("label", { text: "Grupo" }), grupo,
+    el("div", { style: "display:flex; align-items:center; gap:8px; margin-top:12px;" }, [activo, el("span", { text: "Activo (puede entrar al examen)" })]),
+    el("div", { class: "form-actions" }, [guardar, cancelar]),
+    err
+  ]);
+}
+
+// Importación masiva por CSV: archivo o texto pegado -> vista previa -> confirmar.
+// Si la matrícula ya existe se ACTUALIZAN nombre y grupo (upsert); "activo" no se toca.
+function vistaImportarAlumnos() {
+  var cont = el("div");
+  var volver = el("button", { class: "secondary", text: "← Volver a la lista" });
+  volver.onclick = function () { alumnoModo = "lista"; csvPreview = null; csvError = ""; pantallaPanel(); };
+
+  // Paso 1: cargar el CSV.
+  if (csvPreview === null) {
+    var area = el("textarea", {
+      placeholder: "matricula,nombre,grupo\n1234567,Robles González José Manuel,10A\n7654321,Apellido Nombre,10B",
+      class: "mono", style: "min-height:220px; font-size:13.5px;"
+    });
+    area.value = csvTexto;
+    var archivo = el("input", { type: "file", accept: ".csv,.txt,text/csv" });
+    archivo.onchange = function () {
+      var f = archivo.files && archivo.files[0];
+      if (!f) return;
+      var lector = new FileReader();
+      lector.onload = function () { area.value = String(lector.result); };
+      lector.readAsText(f, "UTF-8");
+    };
+    var err = el("p", { class: "err", text: csvError });
+    var procesar = el("button", { text: "Procesar" });
+    procesar.onclick = function () {
+      csvTexto = area.value;
+      if (!csvTexto.trim()) { err.textContent = "Pega el CSV o elige un archivo."; return; }
+      var r = parsearCSV(csvTexto);
+      csvError = r.error || "";
+      csvPreview = r.filas;
+      pantallaPanel();
+    };
+    cont.appendChild(el("div", { class: "toolbar" }, [el("span", { class: "muted", text: "Importar alumnos por CSV" }), volver]));
+    cont.appendChild(el("div", { class: "card" }, [
+      el("p", { class: "muted", text: "Columnas: matricula, nombre, grupo (con o sin encabezado; separador coma, punto y coma o tabulador). Si la matrícula ya existe se actualizan su nombre y grupo; el estado activo no cambia. Guarda el Excel como CSV UTF-8 para conservar los acentos." }),
+      archivo,
+      el("label", { text: "O pega el contenido aquí" }),
+      area,
+      el("div", { class: "form-actions" }, [procesar]),
+      err
+    ]));
+    return cont;
+  }
+
+  // Paso 2: vista previa con conteo de nuevos / actualizaciones / errores.
+  var existentes = {};
+  alumnos.forEach(function (a) { existentes[a.matricula] = true; });
+  var errores = csvPreview.filter(function (a) { return a._error; }).length;
+  var actualizar = csvPreview.filter(function (a) { return !a._error && existentes[a.matricula]; }).length;
+  var nuevos = csvPreview.length - errores - actualizar;
+  cont.appendChild(el("div", { class: "toolbar" }, [
+    el("span", { class: "muted", text: csvPreview.length + " fila(s) · " + nuevos + " nuevo(s) · " + actualizar + " por actualizar" + (errores ? " · " + errores + " con error" : "") }),
+    volver
+  ]));
+  var tbody = el("tbody");
+  csvPreview.forEach(function (a) {
+    tbody.appendChild(el("tr", { class: a._error ? "fila-error" : "" }, [
+      el("td", { class: "num", text: a.matricula || "—" }),
+      el("td", { text: a.nombre || "—" }),
+      el("td", { text: a.grupo || "—" }),
+      el("td", { text: a._error ? a._error : (existentes[a.matricula] ? "Actualiza" : "Nuevo") })
+    ]));
+  });
+  cont.appendChild(el("div", { class: "scroller-alto" }, [
+    el("table", null, [
+      el("thead", null, [el("tr", null, [el("th", { text: "Matrícula" }), el("th", { text: "Nombre" }), el("th", { text: "Grupo" }), el("th", { text: "Estado" })])]),
+      tbody
+    ])
+  ]));
+
+  var confirmar = el("button", { text: csvGuardando ? "Guardando..." : "Confirmar importación" });
+  confirmar.disabled = errores > 0 || csvGuardando || !csvPreview.length;
+  confirmar.onclick = guardarCSV;
+  var descartar = el("button", { class: "secondary", text: "Descartar y editar CSV" });
+  descartar.onclick = function () { csvPreview = null; csvError = ""; pantallaPanel(); };
+  if (csvError) cont.appendChild(el("p", { class: "err", text: csvError }));
+  cont.appendChild(el("div", { class: "form-actions" }, [confirmar, descartar]));
+  return cont;
+}
+
+// Envía las filas del CSV a Supabase como upsert por matrícula (una sola petición).
+// Todas las filas llevan exactamente las mismas claves (requisito de PostgREST).
+function guardarCSV() {
+  var payload = csvPreview.map(function (a) { return { matricula: a.matricula, nombre: a.nombre, grupo: a.grupo }; });
+  csvGuardando = true; csvError = ""; pantallaPanel();
+  escribirAlumnos("/rest/v1/alumnos", {
+    method: "POST",
+    headers: { Prefer: "resolution=merge-duplicates,return=representation" },
+    body: JSON.stringify(payload)
+  }).then(function (filas) {
+    csvGuardando = false; csvPreview = null; csvTexto = "";
+    csvMsg = "Importación lista: " + filas.length + " alumno(s) guardados.";
+    alumnoModo = "lista";
+    return cargarAlumnos();
+  }).then(pantallaPanel).catch(function (e) {
+    csvGuardando = false; csvError = "No se pudo guardar: " + e.message; pantallaPanel();
+  });
+}
+
+// Pestaña "Alumnos" (lista, búsqueda, filtro por grupo, activar/desactivar, borrar).
+function vistaAlumnos() {
+  if (alumnoEditando !== null) return formAlumno(alumnoEditando);
+  if (alumnoModo === "importar") return vistaImportarAlumnos();
+
+  var cont = el("div");
+  if (csvMsg) { cont.appendChild(el("p", { class: "ok", text: csvMsg })); csvMsg = ""; } // se muestra una sola vez
+
+  var activos = alumnos.filter(function (a) { return a.activo; }).length;
+  var nuevo = el("button", { text: "+ Nuevo alumno" });
+  nuevo.onclick = function () { alumnoEditando = "nuevo"; pantallaPanel(); };
+  var importar = el("button", { class: "secondary", text: "Importar CSV" });
+  importar.onclick = function () { alumnoModo = "importar"; csvError = ""; pantallaPanel(); };
+  cont.appendChild(el("div", { class: "toolbar" }, [
+    el("span", { class: "muted", text: alumnos.length + " alumno(s) · " + activos + " activo(s)" }),
+    el("div", { class: "grupo-btn" }, [importar, nuevo])
+  ]));
+
+  // Búsqueda y filtro: solo se repinta la tabla (no el campo), para no perder el foco al teclear.
+  var busca = el("input", { type: "text", value: alumnoBusqueda, placeholder: "Buscar por matrícula o nombre", autocomplete: "off" });
+  var grupoSel = el("select");
+  grupoSel.appendChild(el("option", { value: "", text: "Todos los grupos" }));
+  gruposDeAlumnos().forEach(function (g) { grupoSel.appendChild(el("option", { value: g, text: g })); });
+  grupoSel.value = alumnoGrupoFiltro;
+  cont.appendChild(el("div", { class: "filtros" }, [busca, grupoSel]));
+  var tabla = el("div", { class: "scroller" });
+  cont.appendChild(tabla);
+
+  function pintarTabla() {
+    var q = normalizar(alumnoBusqueda);
+    var lista = alumnos.filter(function (a) {
+      if (alumnoGrupoFiltro !== "" && a.grupo !== alumnoGrupoFiltro) return false;
+      return !q || normalizar(a.matricula).indexOf(q) >= 0 || normalizar(a.nombre).indexOf(q) >= 0;
+    });
+    tabla.innerHTML = "";
+    if (!lista.length) {
+      tabla.appendChild(el("div", { class: "empty", text: alumnos.length ? "Ningún alumno coincide con el filtro." : "No hay alumnos todavía. Agrega uno o importa un CSV." }));
+      return;
+    }
+    var tbody = el("tbody");
+    lista.forEach(function (a) {
+      var editar = el("button", { class: "secondary", text: "Editar" });
+      editar.onclick = function () { alumnoEditando = a.matricula; pantallaPanel(); };
+      // Activar/desactivar: impide o permite entrar sin borrar el historial.
+      var alternar = el("button", { class: "secondary", text: a.activo ? "Desactivar" : "Activar" });
+      alternar.onclick = function () {
+        alternar.disabled = true;
+        escribirAlumnos("/rest/v1/alumnos?matricula=eq." + encodeURIComponent(a.matricula), { method: "PATCH", body: JSON.stringify({ activo: !a.activo }) })
+          .then(cargarAlumnos).then(pantallaPanel)
+          .catch(function (e) { alert("No se pudo cambiar el estado: " + e.message); alternar.disabled = false; });
+      };
+      var borrar = el("button", { class: "danger", text: "Borrar" });
+      borrar.onclick = function () {
+        if (!confirm("¿Borrar a " + a.nombre + " (" + a.matricula + ")?\nSus resultados anteriores se conservan. Si solo quieres impedir su acceso, usa Desactivar.")) return;
+        escribirAlumnos("/rest/v1/alumnos?matricula=eq." + encodeURIComponent(a.matricula), { method: "DELETE" })
+          .then(cargarAlumnos).then(pantallaPanel)
+          .catch(function (e) { alert("No se pudo borrar: " + e.message); });
+      };
+      tbody.appendChild(el("tr", null, [
+        el("td", { class: "num", text: a.matricula }),
+        el("td", { text: a.nombre }),
+        el("td", { text: a.grupo }),
+        el("td", { class: a.activo ? "estado-activa" : "estado-inactiva", text: a.activo ? "Activo" : "Inactivo" }),
+        el("td", null, [el("div", { class: "row-actions" }, [editar, alternar, borrar])])
+      ]));
+    });
+    tabla.appendChild(el("table", null, [
+      el("thead", null, [el("tr", null, [el("th", { text: "Matrícula" }), el("th", { text: "Nombre" }), el("th", { text: "Grupo" }), el("th", { text: "Estado" }), el("th", { text: "" })])]),
+      tbody
+    ]));
+  }
+  busca.oninput = function () { alumnoBusqueda = busca.value; pintarTabla(); };
+  grupoSel.onchange = function () { alumnoGrupoFiltro = grupoSel.value; pintarTabla(); };
+  pintarTabla();
+  return cont;
+}
+
+// Pestaña "Resultados": exámenes ya contestados, con matrícula y grupo del alumno.
+// Los resultados anteriores a la matrícula no los tienen: se muestra "—".
+=======
 // Pestaña "Resultados": exámenes ya contestados (CAMBIO: se muestra la materia).
+>>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
 function vistaResultados() {
   var cont = el("div", { class: "toolbar" }, [el("span", { class: "muted", text: resultados.length + " resultado(s)" })]);
   if (!resultados.length) return el("div", null, [cont, el("div", { class: "empty", text: "Todavía no hay exámenes contestados." })]);
@@ -500,6 +960,11 @@ function vistaResultados() {
     var fecha = new Date(r.creado_en).toLocaleString("es-MX", { dateStyle: "medium", timeStyle: "short" });
     tbody.appendChild(el("tr", null, [
       el("td", { text: r.nombre }),
+<<<<<<< HEAD
+      el("td", { class: "num", text: r.matricula || "—" }),
+      el("td", { text: r.grupo || "—" }),
+=======
+>>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
       el("td", { class: "muted", text: nombreMateria(r.materia_id) }),
       el("td", { class: "num", text: r.correctas + " / " + r.total }),
       el("td", { class: "muted", text: fecha }),
@@ -508,7 +973,11 @@ function vistaResultados() {
   });
   return el("div", null, [cont, el("div", { class: "scroller" }, [
     el("table", null, [
+<<<<<<< HEAD
+      el("thead", null, [el("tr", null, [el("th", { text: "Alumno" }), el("th", { text: "Matrícula" }), el("th", { text: "Grupo" }), el("th", { text: "Materia" }), el("th", { text: "Puntaje" }), el("th", { text: "Fecha" }), el("th", { text: "" })])]),
+=======
       el("thead", null, [el("tr", null, [el("th", { text: "Alumno" }), el("th", { text: "Materia" }), el("th", { text: "Puntaje" }), el("th", { text: "Fecha" }), el("th", { text: "" })])]),
+>>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
       tbody
     ])
   ])]);
@@ -566,11 +1035,18 @@ function formEdicionPreview(idx) {
 }
 
 // Guarda en Supabase las preguntas de la vista previa.
+<<<<<<< HEAD
+// (1) cada pregunta lleva materia_id, seccion y contexto;
+// (2) "reemplazar" desactiva SOLO las preguntas activas de la materia elegida;
+// (3) si NO se reemplaza, el orden se corre para quedar después de las preguntas
+// ya existentes de esa materia.
+=======
 // CAMBIOS: (1) cada pregunta lleva materia_id, seccion y contexto;
 // (2) "reemplazar" ahora desactiva SOLO las preguntas activas de la materia
 // elegida (antes desactivaba las de todas las materias); (3) si NO se
 // reemplaza, el orden se corre para quedar después de las preguntas ya
 // existentes de esa materia.
+>>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
 function guardarImportacion() {
   var materiaId = scriptMateria === "" ? null : Number(scriptMateria);
   if (materiaId === null) { scriptErrorGuardado = "Elige la materia destino antes de confirmar."; render(); return; }
@@ -605,7 +1081,7 @@ function vistaImportar() {
   if (scriptPreview === null) {
     var area = el("textarea", {
       placeholder: "function crearExamenUnidad2() {\n  var exam = FormApp.create('ENGLISH VIII - UNIT 2');\n\n  var item = exam.addMultipleChoiceItem();\n  item.setTitle('What is the capital of France?')\n      .setChoices([\n        item.createChoice('Paris', true),\n        item.createChoice('London', false),\n        item.createChoice('Berlin', false),\n        item.createChoice('Madrid', false)\n      ]);\n\n  var item2 = exam.addMultipleChoiceItem();\n  item2.setTitle('2 + 2 =')\n       .setChoices([\n         item2.createChoice('3', false),\n         item2.createChoice('4', true),\n         item2.createChoice('5', false)\n       ]);\n}",
-      style: "width:100%; min-height:260px; font-family:monospace; font-size:13.5px; padding:10px; border:1px solid var(--line); border-radius:var(--radius); background:var(--paper); color:var(--ink);"
+      class: "mono", style: "width:100%; min-height:260px; font-size:13.5px; padding:10px;"
     });
     area.value = scriptTexto;
     var err = el("p", { class: "err", text: scriptErrorGuardado });
@@ -659,7 +1135,11 @@ function vistaImportar() {
     cont.appendChild(el("div", { class: "card", style: "margin-bottom:10px;" }, filas));
   });
 
+<<<<<<< HEAD
+  // Selector de materia destino. Por defecto la primera materia, para
+=======
   // NUEVO: selector de materia destino. Por defecto la primera materia, para
+>>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
   // que el caso común (una sola materia) no requiera un paso extra.
   if (scriptMateria === "" && materias.length) scriptMateria = String(materias[0].id);
   var materiaSel = selectorMaterias(scriptMateria, false);
@@ -685,31 +1165,55 @@ function vistaImportar() {
 }
 
 // Estructura general del panel: barra superior, pestañas y contenido.
+<<<<<<< HEAD
+// No consulta la red: solo dibuja con los datos ya cargados (ver render()).
+=======
+>>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
 function pantallaPanel() {
   var tabPreg = el("button", { class: "tab" + (tab === "preguntas" ? " on" : ""), text: "Preguntas" });
+  var tabAlu = el("button", { class: "tab" + (tab === "alumnos" ? " on" : ""), text: "Alumnos" });
   var tabImp = el("button", { class: "tab" + (tab === "importar" ? " on" : ""), text: "Importar" });
   var tabRes = el("button", { class: "tab" + (tab === "resultados" ? " on" : ""), text: "Resultados" });
-  tabPreg.onclick = function () { tab = "preguntas"; editando = null; render(); };
-  tabImp.onclick = function () { tab = "importar"; render(); };
-  tabRes.onclick = function () { tab = "resultados"; render(); };
+  tabPreg.onclick = function () { tab = "preguntas"; editando = null; pantallaPanel(); };
+  tabAlu.onclick = function () { tab = "alumnos"; alumnoEditando = null; alumnoModo = "lista"; pantallaPanel(); };
+  tabImp.onclick = function () { tab = "importar"; pantallaPanel(); };
+  tabRes.onclick = function () { tab = "resultados"; pantallaPanel(); };
   var salir = el("button", { text: "Cerrar sesión" });
   salir.onclick = cerrarSesion;
 
+  var vista = tab === "preguntas" ? vistaPreguntas()
+    : tab === "alumnos" ? vistaAlumnos()
+    : tab === "importar" ? vistaImportar()
+    : vistaResultados();
   var contenido = el("div", { class: "wrap" }, [
-    el("div", { class: "tabs" }, [tabPreg, tabImp, tabRes]),
-    tab === "preguntas" ? vistaPreguntas() : tab === "importar" ? vistaImportar() : vistaResultados()
+    el("div", { class: "tabs" }, [tabPreg, tabAlu, tabImp, tabRes]),
+    vista
   ]);
 
   app.innerHTML = "";
-  app.appendChild(el("div", { class: "topbar" }, [el("h1", { text: "CheckMyKnowledge" }), salir]));
+  app.appendChild(el("div", { class: "topbar" }, [
+    el("div", { class: "brand" }, [
+      // Placeholder del logo PRISMAL MESH (agregar src="logo.svg" cuando esté el SVG).
+      el("img", { class: "logo", alt: "Logo PRISMAL MESH" }),
+      el("h1", { text: "CheckMyKnowledge" })
+    ]),
+    salir
+  ]));
   app.appendChild(contenido);
 }
 
 // Punto de entrada: sin sesión -> login; con sesión -> recarga los datos
+<<<<<<< HEAD
+// (materias, preguntas, alumnos, resultados) y dibuja el panel.
+function render() {
+  if (!session) { pantallaLogin(); return; }
+  Promise.all([cargarMaterias(), cargarPreguntas(), cargarAlumnos(), cargarResultados()]).then(pantallaPanel).catch(function (e) {
+=======
 // (materias, preguntas, resultados) y dibuja el panel.
 function render() {
   if (!session) { pantallaLogin(); return; }
   Promise.all([cargarMaterias(), cargarPreguntas(), cargarResultados()]).then(pantallaPanel).catch(function (e) {
+>>>>>>> 9ba5dd071d2908e02be4d12955f328fe02fe6562
     app.innerHTML = "";
     app.appendChild(el("div", { class: "wrap" }, [el("div", { class: "empty", text: "Error: " + e.message })]));
   });
